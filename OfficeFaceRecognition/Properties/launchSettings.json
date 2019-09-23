@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "OfficeFaceRecognition": {
+      "commandName": "Project",
+      "commandLineArgs": "-i DataSet -e Embeddings -d Detector -m EmbeddingModel"
+    }
+  }
+}
