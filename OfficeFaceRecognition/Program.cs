@@ -24,7 +24,7 @@ namespace OfficeFaceRecognition
             Console.WriteLine("[INFO] load serialized face embedding model from disk...");
             var embedder = DnnInvoke.ReadNet(facePars.EmbeddingModel);
             Console.WriteLine("[INFO] quantifying faces...");
-            var imagePaths = Directory.GetFiles(facePars.DataSet, "*.*");
+            var imagePaths = Directory.GetFiles(facePars.DataSet, "*.*", SearchOption.AllDirectories);
         }
 
         private static void HandleParseError(IEnumerable<Error> errors)
