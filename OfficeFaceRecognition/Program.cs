@@ -22,7 +22,6 @@ namespace OfficeFaceRecognition
             var detectionModule = new DetectionModule(facePars);
             var faces = detectionModule
                 .GetFaces(images)
-                .Take(12)
                 .Select(f => (GetPersonName(f.Item1), f.Item2))
                 .ToList();
             var labelMap = new LabelMap(faces.Select(f => f.Item1).Distinct());

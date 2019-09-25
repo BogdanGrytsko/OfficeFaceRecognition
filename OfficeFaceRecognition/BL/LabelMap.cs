@@ -9,6 +9,7 @@ namespace OfficeFaceRecognition.BL
         {
             var idx = 1;
             Map = names.Distinct().ToDictionary(n => n, n => idx++);
+            Map["unknown"] = 0;
             ReverseMap = Map.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
         }
 
