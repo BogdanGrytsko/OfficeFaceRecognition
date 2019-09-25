@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Emgu.CV;
+using Emgu.CV.CvEnum;
 using Emgu.CV.Dnn;
 using Emgu.CV.Structure;
 
@@ -10,35 +11,43 @@ namespace OfficeFaceRecognition.Detector
 {
     public class DetectionModule
     {
-        private readonly FaceRecognitionParams facePars;
         private readonly Net detector, embedder;
+        private readonly double minConfidence;
 
         public DetectionModule(FaceRecognitionParams facePars)
         {
-            this.facePars = facePars;
+            Console.WriteLine("[INFO] loading face detector...");
             detector = GetDetector(facePars);
             Console.WriteLine("[INFO] load serialized face embedding model from disk...");
             embedder = DnnInvoke.ReadNet(facePars.EmbeddingModel);
+            minConfidence = facePars.Confidence;
         }
 
-        public List<(string, Mat)> GetLabeledFaces()
+        public DetectionModule(byte[] proto, byte[] caffeModel, string embeddingModel, double minConfidence)
         {
-            var list = new List<(string, Mat)>();
+            detector = DnnInvoke.ReadNetFromCaffe(proto, caffeModel);
+            //todo : is there a way to read embeddingModel from bytes? it's a torch model.
+            embedder = DnnInvoke.ReadNet(embeddingModel);
+            this.minConfidence = minConfidence;
+        }
+
+        public IEnumerable<(string, Mat)> GetFaces(IEnumerable<(string, byte[])> images)
+        {
             Console.WriteLine("[INFO] quantifying faces...");
-            var imagePaths = Directory.GetFiles(facePars.DataSet, "*.*", SearchOption.AllDirectories);
-            foreach (var imagePath in imagePaths)
+            foreach (var image in images)
             {
-                var res = ProcessImage(imagePath);
+                var res = ProcessImage(image);
                 if (res.HasValue)
-                    list.Add(res.Value);
+                    yield return res.Value;
             }
-            return list;
         }
 
-        private (string, Mat)? ProcessImage(string imagePath)
+        private (string, Mat)? ProcessImage((string, byte[]) byteImage)
         {
-            Console.WriteLine($"Processing image {imagePath}");
-            var image = CvInvoke.Imread(imagePath);
+            var (fileName, bytes) = byteImage;
+            Console.WriteLine($"Processing image {fileName}");
+            var image = new Mat();
+            CvInvoke.Imdecode(bytes, ImreadModes.AnyColor, image);
             //todo : here was the step with resizing to 600, investigate
             //image = imutils.resize(image, width = 600)
             var (h, w) = (image.Size.Height, image.Size.Width);
@@ -56,7 +65,7 @@ namespace OfficeFaceRecognition.Detector
             //face, so find the bounding box with the largest probability
             var maxi = GetMaxConfidenceIdx(detection, data);
             var confidence = data[0, 0, maxi, 2];
-            if (confidence < facePars.Confidence) return null;
+            if (confidence < minConfidence) return null;
             //compute the (x, y)-coordinates of the bounding box for the face
             var (startX, startY, endX, endY) = (data[0, 0, maxi, 3] * w, data[0, 0, maxi, 4] * h,
                 data[0, 0, maxi, 5] * w, data[0, 0, maxi, 6] * h);
@@ -74,17 +83,15 @@ namespace OfficeFaceRecognition.Detector
                 swapRB: true, crop: false);
             embedder.SetInput(faceBlob);
             var vec = embedder.Forward();
-            var personName = Path.GetFileName(Path.GetDirectoryName(imagePath));
-            return (personName, vec.Reshape(1));
+            
+            return (fileName, vec.Reshape(1));
         }
 
         private static Net GetDetector(FaceRecognitionParams facePars)
         {
-            Console.WriteLine("[INFO] loading face detector...");
             var protoPath = Path.Combine(facePars.Detector, "deploy.prototxt");
             var modelPath = Path.Combine(facePars.Detector, "res10_300x300_ssd_iter_140000.caffemodel");
-            var detector = DnnInvoke.ReadNetFromCaffe(protoPath, modelPath);
-            return detector;
+            return DnnInvoke.ReadNetFromCaffe(protoPath, modelPath);
         }
 
         private static int GetMaxConfidenceIdx(Mat detection, float[,,,] data)
