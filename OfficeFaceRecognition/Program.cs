@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommandLine;
-using Emgu.CV;
 using OfficeFaceRecognition.BL;
 
 namespace OfficeFaceRecognition
@@ -37,13 +36,6 @@ namespace OfficeFaceRecognition
                 var prediction = recognitionModule.Predict(testImg);
                 Console.WriteLine($"Img name : {name} Prediction: {labelMap.ReverseMap[prediction.Label]}, Dist : {prediction.Distance}");
             }
-        }
-
-        private static IEnumerable<(int, Mat)> GetLabeledFaces(List<(string, Mat)> faces)
-        {
-            var idx = 1;
-            var labelMap = faces.Select(f => f.Item1).Distinct().ToDictionary(f => f, f => idx++);
-            return faces.Select(f => (labelMap[f.Item1], f.Item2));
         }
 
         private static IEnumerable<(string, byte[])> GetImages(string dataSet)
