@@ -1,4 +1,4 @@
-﻿namespace OfficeFaceRecognition
+﻿namespace OfficeFaceRecognition.Video
 {
     public class IncomingStream
     {

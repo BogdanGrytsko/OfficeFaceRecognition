@@ -7,7 +7,7 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Dnn;
 using Emgu.CV.Structure;
 
-namespace OfficeFaceRecognition.Detector
+namespace OfficeFaceRecognition.BL
 {
     public class DetectionModule
     {
@@ -34,22 +34,19 @@ namespace OfficeFaceRecognition.Detector
         public IEnumerable<(string, Mat)> GetFaces(IEnumerable<(string, byte[])> images)
         {
             Console.WriteLine("[INFO] quantifying faces...");
-            foreach (var image in images)
+            foreach (var (name, bytes) in images)
             {
-                var res = ProcessImage(image);
-                if (res.HasValue)
-                    yield return res.Value;
+                Console.WriteLine($"Processing image {name}");
+                var res = ProcessImage(bytes);
+                if (res != null)
+                    yield return (name, res);
             }
         }
 
-        private (string, Mat)? ProcessImage((string, byte[]) byteImage)
+        public Mat ProcessImage(byte[] byteImage)
         {
-            var (fileName, bytes) = byteImage;
-            Console.WriteLine($"Processing image {fileName}");
             var image = new Mat();
-            CvInvoke.Imdecode(bytes, ImreadModes.AnyColor, image);
-            //todo : here was the step with resizing to 600, investigate
-            //image = imutils.resize(image, width = 600)
+            CvInvoke.Imdecode(byteImage, ImreadModes.AnyColor, image);
             var (h, w) = (image.Size.Height, image.Size.Width);
             var resizedThreeHundred = new Mat();
             CvInvoke.Resize(image, resizedThreeHundred, new Size(300, 300));
@@ -83,8 +80,7 @@ namespace OfficeFaceRecognition.Detector
                 swapRB: true, crop: false);
             embedder.SetInput(faceBlob);
             var vec = embedder.Forward();
-            
-            return (fileName, vec.Reshape(1));
+            return vec.Reshape(1);
         }
 
         private static Net GetDetector(FaceRecognitionParams facePars)

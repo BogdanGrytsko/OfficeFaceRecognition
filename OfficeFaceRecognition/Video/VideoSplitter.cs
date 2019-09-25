@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OfficeFaceRecognition
+namespace OfficeFaceRecognition.Video
 {
     public class VideoSplitter
     {

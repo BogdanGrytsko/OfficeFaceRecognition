@@ -2,7 +2,7 @@
   "profiles": {
     "OfficeFaceRecognition": {
       "commandName": "Project",
-      "commandLineArgs": "-i Dataset -e Embeddings -d FaceDetectionModel -m openface_nn4.small2.v1.t7"
+      "commandLineArgs": "-i Dataset -e Embeddings.trained -d FaceDetectionModel -m openface_nn4.small2.v1.t7"
     }
   }
 }
