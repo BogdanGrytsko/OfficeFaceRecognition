@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using CommandLine;
 using Emgu.CV;
-using Emgu.CV.Dnn;
-using Emgu.CV.Structure;
 using OfficeFaceRecognition.BL;
 
 namespace OfficeFaceRecognition
@@ -34,11 +31,11 @@ namespace OfficeFaceRecognition
 
             var recognitionModule = new FaceRecognitionModule();
             recognitionModule.Train(labeledFaces.ToList(), facePars.Embeddings);
-            foreach (var image in images)
+            foreach (var (name, bytes) in images)
             {
-                var testImg = detectionModule.ProcessImage(image.Item2);
+                var testImg = detectionModule.ProcessImage(bytes);
                 var prediction = recognitionModule.Predict(testImg);
-                Console.WriteLine($"Img name : {image.Item1} Prediction: {labelMap.ReverseMap[prediction.Label]}, Dist : {prediction.Distance}");
+                Console.WriteLine($"Img name : {name} Prediction: {labelMap.ReverseMap[prediction.Label]}, Dist : {prediction.Distance}");
             }
         }
 
