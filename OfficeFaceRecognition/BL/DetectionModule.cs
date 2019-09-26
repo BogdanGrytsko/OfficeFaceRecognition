@@ -51,9 +51,12 @@ namespace OfficeFaceRecognition.BL
             //#load the image, resize it to have a width of 600 pixels (while
             //# maintaining the aspect ratio), and then grab the image dimension
             //image = imutils.resize(image, width=600)
+
             var (h, w) = (image.Size.Height, image.Size.Width);
             var resizedThreeHundred = new Mat();
-            CvInvoke.Resize(image, resizedThreeHundred, new Size(300, 300));
+            var image600 = new Mat();
+            CvInvoke.Resize(image, image600, new Size(600, 600 * image.Height / image.Width));
+            CvInvoke.Resize(image600, resizedThreeHundred, new Size(300, 300));
             var blobFromImage = DnnInvoke.BlobFromImage(
                 resizedThreeHundred, 1, new Size(300, 300), new MCvScalar(104.0, 177.0, 123.0));
             detector.SetInput(blobFromImage);
@@ -72,8 +75,13 @@ namespace OfficeFaceRecognition.BL
                 data[0, 0, maxi, 5] * w, data[0, 0, maxi, 6] * h);
 
             //extract the face ROI and grab the ROI dimensions
-            var face = new Mat(image,
-                new Rectangle((int) startX, (int) startY, (int) (endX - startX), (int) (endY - startY)));
+            var faceRect = Rectangle.FromLTRB((int)startX, (int)startY, (int)endX, (int)endY);
+
+#if DEBUG
+            //DebugHelper.DrawFaceRectAndSave(image.Bitmap, faceRect);
+#endif
+
+            var face = new Mat(image, faceRect);
             var (fH, fW) = (face.Size.Height, face.Size.Width);
             if (fH < 20 || fW < 20) return null;
 
