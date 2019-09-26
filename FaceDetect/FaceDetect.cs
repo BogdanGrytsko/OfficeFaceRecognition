@@ -18,6 +18,7 @@ using Emgu.CV.Structure;
 using System.Runtime.InteropServices;
 using FaceDetection;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace VideoSurveillance
 {
@@ -46,7 +47,7 @@ namespace VideoSurveillance
 
                 _putenv_s("OPENCV_FFMPEG_CAPTURE_OPTIONS", "rtsp_transport;udp");
                 // _putenv_s("OPENCV_FFMPEG_CAPTURE_OPTIONS", "");
-                _cameraCapture = new VideoCapture("rtsp://admin:Face1234@192.168.5.49:554/onvif1", VideoCapture.API.Ffmpeg);                
+                _cameraCapture = new VideoCapture("rtsp://admin:Face1234@192.168.5.49:554/onvif1", VideoCapture.API.Ffmpeg);
                 //_cameraCapture = new VideoCapture("http://192.168.1.90:81/stream?x.mjpeg", VideoCapture.API.Any);
                 //_cameraCapture = new VideoCapture("rtsp://192.168.1.90:8554", VideoCapture.API.Ffmpeg);
                 //_cameraCapture = new VideoCapture("http://192.168.1.90/?x.mjpeg", VideoCapture.API.Ffmpeg);
@@ -72,19 +73,19 @@ namespace VideoSurveillance
             Application.Idle += ProcessFrame;
         }
 
-        static bool frameProcessing = false;
-        static Mat LastProcessedFrame = new Mat();
-        static Thread Twsdetecting;
-        
-        public static void detectAndDisplayFunc(Mat frame)
+        bool frameProcessing = false;
+        bool play = true;
+        bool detection = true;
+
+        public static Mat detectAndDisplayFunc(Mat frame)
         {           
-            long detectionTime;
-            List<Rectangle> faces = new List<Rectangle>();
-            List<Rectangle> eyes = new List<Rectangle>();
+            var faces = new List<Rectangle>();
+            var eyes = new List<Rectangle>();
+
             DetectFace.Detect(
-           frame, "haarcascade_frontalface_default.xml", "haarcascade_eye.xml",
-           faces, eyes,
-           out detectionTime);
+                   frame, "haarcascade_frontalface_default.xml", "haarcascade_eye.xml",
+                   faces, eyes,
+                   out var detectionTime);
 
             //paint faces
             foreach (Rectangle face in faces)
@@ -93,29 +94,42 @@ namespace VideoSurveillance
             //paint eyes
             foreach (Rectangle eye in eyes)
                 CvInvoke.Rectangle(frame, eye, new Bgr(Color.Blue).MCvScalar, 2);
-            LastProcessedFrame = frame;
-            frameProcessing = false;
+
+            return frame;
         }
 
-        void ProcessFrame(object sender, EventArgs e)
+
+
+        async void ProcessFrame(object sender, EventArgs e)
         {
-            if (!_cameraCapture.IsOpened)
+            if (!_cameraCapture.IsOpened || !play)
                 return;
 
             Mat frame = _cameraCapture.QueryFrame();
 
             if (frame == null)
                 return;
+
+            if (!detection)
+            {
+                imageBox1.Image = frame;
+                return;
+            }
+
             if (frameProcessing)
                 return;
 
-            imageBox1.Image = LastProcessedFrame;
+            frameProcessing = true;
+
+            imageBox1.Image = await Task.Run(() =>
+            {
+                detectAndDisplayFunc(frame);
+
+                return frame;
+            });
 
             //skip frames due to poor performance       
-            var twsDetectThread = new ThreadDetectFace(frame);           
-            frameProcessing = true;
-            Twsdetecting = new Thread(new ThreadStart(twsDetectThread.CallDetect));
-            Twsdetecting.Start();
+            frameProcessing = false;
 
             //filter out noises
             //  Mat smoothedFrame = new Mat();
@@ -132,26 +146,20 @@ namespace VideoSurveillance
             //  imageBox1.Image = frame;
             //imageBox2.Image = smallFrame;
         }
-    }
 
-    public class ThreadDetectFace
-    {
-        // State information used in the task.
-        
-        Mat _frame;
-
-        // The constructor obtains the state information.
-        public ThreadDetectFace(Mat frame)
+        private void playButton_Click(object sender, EventArgs e)
         {
-            _frame = frame;            
+            play = playButton.Checked;
         }
 
-        // The thread procedure performs the task, such as formatting
-        // and printing a document.
-        public void CallDetect()
+        private void reprocessButton_Click(object sender, EventArgs e)
         {
-            FaceDetect.detectAndDisplayFunc(_frame);
+            imageBox1.Image = detectAndDisplayFunc(imageBox1.Image as Mat);
         }
 
+        private void detectionButton_Click(object sender, EventArgs e)
+        {
+            detection = detectionButton.Checked;
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace FaceDetection
     public static class DetectFace
     {
         public static void Detect(
-           IInputArray image, String faceFileName, String eyeFileName,
+           IInputArray image, string faceFileName, string eyeFileName,
            List<Rectangle> faces, List<Rectangle> eyes,
            out long detectionTime)
         {
@@ -37,7 +37,7 @@ namespace FaceDetection
                            ugray,
                            1.1,
                            10,
-                           new Size(20, 20));
+                           Size.Empty);// new Size(20, 20));
 
                         faces.AddRange(facesDetected);
 
