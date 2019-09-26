@@ -1,0 +1,1 @@
+copy dll to %User%\Documents\Visual Studio 2019\Visualizers
