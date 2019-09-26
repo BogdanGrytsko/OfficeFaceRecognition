@@ -17,6 +17,7 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using FaceDetect.Detection;
 
 namespace VideoSurveillance
@@ -71,19 +72,19 @@ namespace VideoSurveillance
             Application.Idle += ProcessFrame;
         }
 
-        static bool frameProcessing = false;
-        static Mat lastProcessedFrame = new Mat();
-        static Thread twsdetecting;
+        bool frameProcessing = false;
+        bool play = true;
+        bool detection = true;
 
-        public static void DetectAndDisplayFunc(Mat frame)
-        {
-            long detectionTime;
-            List<Rectangle> faces = new List<Rectangle>();
-            List<Rectangle> eyes = new List<Rectangle>();
+        public static Mat detectAndDisplayFunc(Mat frame)
+        {           
+            var faces = new List<Rectangle>();
+            var eyes = new List<Rectangle>();
+
             DetectFace.Detect(
-                frame, "haarcascade_frontalface_default.xml", "haarcascade_eye.xml",
-                faces, eyes,
-                out detectionTime);
+                   frame, "haarcascade_frontalface_default.xml", "haarcascade_eye.xml",
+                   faces, eyes,
+                   out var detectionTime);
 
             //paint faces
             foreach (Rectangle face in faces)
@@ -92,29 +93,42 @@ namespace VideoSurveillance
             //paint eyes
             foreach (Rectangle eye in eyes)
                 CvInvoke.Rectangle(frame, eye, new Bgr(Color.Blue).MCvScalar, 2);
-            lastProcessedFrame = frame;
-            frameProcessing = false;
+
+            return frame;
         }
 
-        void ProcessFrame(object sender, EventArgs e)
+
+
+        async void ProcessFrame(object sender, EventArgs e)
         {
-            if (!cameraCapture.IsOpened)
+            if (!cameraCapture.IsOpened || !play)
                 return;
 
             Mat frame = cameraCapture.QueryFrame();
 
             if (frame == null)
                 return;
+
+            if (!detection)
+            {
+                imageBox1.Image = frame;
+                return;
+            }
+
             if (frameProcessing)
                 return;
 
-            imageBox1.Image = lastProcessedFrame;
+            frameProcessing = true;
+
+            imageBox1.Image = await Task.Run(() =>
+            {
+                detectAndDisplayFunc(frame);
+
+                return frame;
+            });
 
             //skip frames due to poor performance       
-            var twsDetectThread = new ThreadDetectFace(frame);           
-            frameProcessing = true;
-            twsdetecting = new Thread(twsDetectThread.CallDetect);
-            twsdetecting.Start();
+            frameProcessing = false;
 
             //filter out noises
             //  Mat smoothedFrame = new Mat();
@@ -131,26 +145,20 @@ namespace VideoSurveillance
             //  imageBox1.Image = frame;
             //imageBox2.Image = smallFrame;
         }
-    }
 
-    public class ThreadDetectFace
-    {
-        // State information used in the task.
-
-        private readonly Mat frame;
-
-        // The constructor obtains the state information.
-        public ThreadDetectFace(Mat frame)
+        private void playButton_Click(object sender, EventArgs e)
         {
-            this.frame = frame;            
+            play = playButton.Checked;
         }
 
-        // The thread procedure performs the task, such as formatting
-        // and printing a document.
-        public void CallDetect()
+        private void reprocessButton_Click(object sender, EventArgs e)
         {
-            FaceDetect.DetectAndDisplayFunc(frame);
+            imageBox1.Image = detectAndDisplayFunc(imageBox1.Image as Mat);
         }
 
+        private void detectionButton_Click(object sender, EventArgs e)
+        {
+            detection = detectionButton.Checked;
+        }
     }
 }
