@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using Emgu.CV;
 
-namespace FaceDetection
+namespace FaceDetect.Detection
 {
     public static class DetectFace
     {
@@ -13,11 +13,10 @@ namespace FaceDetection
            List<Rectangle> faces, List<Rectangle> eyes,
            out long detectionTime)
         {
-            Stopwatch watch;
-
             using (InputArray iaImage = image.GetInputArray())
             {
                 //Read the HaarCascade objects
+                Stopwatch watch;
                 using (CascadeClassifier face = new CascadeClassifier(faceFileName))
                 using (CascadeClassifier eye = new CascadeClassifier(eyeFileName))
                 {

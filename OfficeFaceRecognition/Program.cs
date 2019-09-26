@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommandLine;
-using Emgu.CV;
 using OfficeFaceRecognition.BL;
 
 namespace OfficeFaceRecognition

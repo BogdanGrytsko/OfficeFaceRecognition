@@ -16,9 +16,9 @@ using Emgu.CV.UI;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using System.Runtime.InteropServices;
-using FaceDetection;
 using System.Threading;
 using System.Threading.Tasks;
+using FaceDetect.Detection;
 
 namespace VideoSurveillance
 {
@@ -27,11 +27,11 @@ namespace VideoSurveillance
         [DllImport("msvcrt.dll")]
         public static extern int _putenv_s(string e, string v);
 
-        private static VideoCapture _cameraCapture;
+        private static VideoCapture cameraCapture;
 
-        private static IBackgroundSubtractor _fgDetector;
-        private static Emgu.CV.Cvb.CvBlobDetector _blobDetector;
-        private static Emgu.CV.Cvb.CvTracks _tracker;
+        private static IBackgroundSubtractor fgDetector;
+        private static CvBlobDetector blobDetector;
+        private static CvTracks tracker;
 
         public FaceDetect()
         {
@@ -47,7 +47,7 @@ namespace VideoSurveillance
 
                 _putenv_s("OPENCV_FFMPEG_CAPTURE_OPTIONS", "rtsp_transport;udp");
                 // _putenv_s("OPENCV_FFMPEG_CAPTURE_OPTIONS", "");
-                _cameraCapture = new VideoCapture("rtsp://admin:Face1234@192.168.5.49:554/onvif1", VideoCapture.API.Ffmpeg);
+                cameraCapture = new VideoCapture("rtsp://admin:Face1234@192.168.5.49:554/onvif1", VideoCapture.API.Ffmpeg);
                 //_cameraCapture = new VideoCapture("http://192.168.1.90:81/stream?x.mjpeg", VideoCapture.API.Any);
                 //_cameraCapture = new VideoCapture("rtsp://192.168.1.90:8554", VideoCapture.API.Ffmpeg);
                 //_cameraCapture = new VideoCapture("http://192.168.1.90/?x.mjpeg", VideoCapture.API.Ffmpeg);
@@ -58,7 +58,6 @@ namespace VideoSurveillance
                 // _cameraCapture.Read(_frame);
                 //// _cameraCapture.Retrieve(_frame, 0);
                 // _frame.CopyTo(_frameCopy);              
-
             }
             catch (Exception e)
             {
@@ -66,9 +65,9 @@ namespace VideoSurveillance
                 return;
             }
 
-            _fgDetector = new BackgroundSubtractorMOG2();
-            _blobDetector = new CvBlobDetector();
-            _tracker = new CvTracks();
+            fgDetector = new BackgroundSubtractorMOG2();
+            blobDetector = new CvBlobDetector();
+            tracker = new CvTracks();
 
             Application.Idle += ProcessFrame;
         }
@@ -102,10 +101,10 @@ namespace VideoSurveillance
 
         async void ProcessFrame(object sender, EventArgs e)
         {
-            if (!_cameraCapture.IsOpened || !play)
+            if (!cameraCapture.IsOpened || !play)
                 return;
 
-            Mat frame = _cameraCapture.QueryFrame();
+            Mat frame = cameraCapture.QueryFrame();
 
             if (frame == null)
                 return;
