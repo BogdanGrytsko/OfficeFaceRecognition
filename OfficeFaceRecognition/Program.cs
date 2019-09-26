@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommandLine;
+using Emgu.CV;
 using OfficeFaceRecognition.BL;
 
 namespace OfficeFaceRecognition
@@ -20,6 +21,7 @@ namespace OfficeFaceRecognition
         {
             var images = GetImages(facePars.DataSet).ToList();
             var detectionModule = new DetectionModule(facePars);
+
             var faces = detectionModule
                 .GetFaces(images)
                 .Select(f => (GetPersonName(f.Item1), f.Item2))
@@ -27,9 +29,11 @@ namespace OfficeFaceRecognition
             var labelMap = new LabelMap(faces.Select(f => f.Item1).Distinct());
             var labeledFaces = faces.Select(f => (labelMap.Map[f.Item1], f.Item2));
 
+            var testImages = GetImages(facePars.TestSet).ToList();
             var recognitionModule = new FaceRecognitionModule();
             recognitionModule.Train(labeledFaces.ToList(), facePars.Embeddings);
-            foreach (var (name, bytes) in images)
+
+            foreach (var (name, bytes) in testImages)
             {
                 var testImg = detectionModule.ProcessImage(bytes);
                 var prediction = recognitionModule.Predict(testImg);

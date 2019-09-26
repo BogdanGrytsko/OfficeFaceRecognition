@@ -11,7 +11,7 @@ namespace OfficeFaceRecognition.BL
 {
     public class DetectionModule
     {
-        private readonly Net detector, embedder;
+        private Net detector, embedder;
         private readonly double minConfidence;
 
         public DetectionModule(FaceRecognitionParams facePars)
@@ -36,7 +36,8 @@ namespace OfficeFaceRecognition.BL
             Console.WriteLine("[INFO] quantifying faces...");
             foreach (var (name, bytes) in images)
             {
-                Console.WriteLine($"Processing image {name}");
+                Console.WriteLine($"Processing image {name}");              
+
                 var res = ProcessImage(bytes);
                 if (res != null)
                     yield return (name, res);
@@ -91,7 +92,7 @@ namespace OfficeFaceRecognition.BL
             var faceBlob = DnnInvoke.BlobFromImage(face, 1.0 / 255, new Size(96, 96), new MCvScalar(0, 0, 0),
                 swapRB: true, crop: false);
             embedder.SetInput(faceBlob);
-            var vec = embedder.Forward();
+            var vec = embedder.Forward().Clone();
             return vec.Reshape(1);
         }
 

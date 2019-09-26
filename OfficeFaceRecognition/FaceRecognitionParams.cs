@@ -7,6 +7,9 @@ namespace OfficeFaceRecognition
         [Option('i', "DataSet", Required = true, HelpText = "path to input directory of faces + images")]
         public string DataSet { get; set; }
 
+        [Option('t', "TestSet", Required = true, HelpText = "path to test directory of faces + images")]
+        public string TestSet { get; set; }
+
         [Option('e', "Embeddings", Required = true, HelpText = "path to output serialized db of facial embeddings")]
         public string Embeddings { get; set; }
 
