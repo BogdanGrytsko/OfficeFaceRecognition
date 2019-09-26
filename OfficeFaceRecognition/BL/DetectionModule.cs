@@ -11,7 +11,7 @@ namespace OfficeFaceRecognition.BL
 {
     public class DetectionModule
     {
-        private Net detector, embedder;
+        private readonly Net detector, embedder;
         private readonly double minConfidence;
 
         public DetectionModule(FaceRecognitionParams facePars)
@@ -48,10 +48,8 @@ namespace OfficeFaceRecognition.BL
         {
             var image = new Mat();
             CvInvoke.Imdecode(byteImage, ImreadModes.AnyColor, image);
-            //TODO : maybe resize to 600?
             //#load the image, resize it to have a width of 600 pixels (while
             //# maintaining the aspect ratio), and then grab the image dimension
-            //image = imutils.resize(image, width=600)
 
             var (h, w) = (image.Size.Height, image.Size.Width);
             var resizedThreeHundred = new Mat();
