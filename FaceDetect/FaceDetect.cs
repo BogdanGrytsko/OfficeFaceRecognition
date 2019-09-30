@@ -19,6 +19,8 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using FaceDetect.Detection;
+using OfficeFaceRecognition.Video;
+using System.Diagnostics;
 
 namespace VideoSurveillance
 {
@@ -32,10 +34,12 @@ namespace VideoSurveillance
         private static IBackgroundSubtractor fgDetector;
         private static CvBlobDetector blobDetector;
         private static CvTracks tracker;
+        private readonly FaceEyeDetector detector;
 
         public FaceDetect()
         {
             InitializeComponent();
+            detector = new FaceEyeDetector("haarcascade_frontalface_default.xml", "haarcascade_eye.xml");
             Run();
         }
 
@@ -76,28 +80,18 @@ namespace VideoSurveillance
         bool play = true;
         bool detection = true;
 
-        public static Mat detectAndDisplayFunc(Mat frame)
-        {           
-            var faces = new List<Rectangle>();
-            var eyes = new List<Rectangle>();
+        public Mat DetectAndDisplay(Mat frame)
+        {
+            var (faces, eyes) = detector.Detect(frame);
 
-            DetectFace.Detect(
-                   frame, "haarcascade_frontalface_default.xml", "haarcascade_eye.xml",
-                   faces, eyes,
-                   out var detectionTime);
-
-            //paint faces
             foreach (Rectangle face in faces)
                 CvInvoke.Rectangle(frame, face, new Bgr(Color.Red).MCvScalar, 2);
 
-            //paint eyes
             foreach (Rectangle eye in eyes)
                 CvInvoke.Rectangle(frame, eye, new Bgr(Color.Blue).MCvScalar, 2);
 
             return frame;
         }
-
-
 
         async void ProcessFrame(object sender, EventArgs e)
         {
@@ -122,9 +116,7 @@ namespace VideoSurveillance
 
             imageBox1.Image = await Task.Run(() =>
             {
-                detectAndDisplayFunc(frame);
-
-                return frame;
+                return DetectAndDisplay(frame);
             });
 
             //skip frames due to poor performance       
@@ -153,7 +145,7 @@ namespace VideoSurveillance
 
         private void reprocessButton_Click(object sender, EventArgs e)
         {
-            imageBox1.Image = detectAndDisplayFunc(imageBox1.Image as Mat);
+            imageBox1.Image = DetectAndDisplay(imageBox1.Image as Mat);
         }
 
         private void detectionButton_Click(object sender, EventArgs e)
