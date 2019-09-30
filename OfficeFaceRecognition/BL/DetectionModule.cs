@@ -36,7 +36,7 @@ namespace OfficeFaceRecognition.BL
             Console.WriteLine("[INFO] quantifying faces...");
             foreach (var (name, bytes) in images)
             {
-                Console.WriteLine($"Processing image {name}");              
+                Console.WriteLine($"Processing image {name}");
 
                 var res = ProcessImage(bytes);
                 if (res != null)

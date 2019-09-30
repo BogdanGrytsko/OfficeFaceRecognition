@@ -14,6 +14,11 @@ namespace OfficeFaceRecognition.BL
             recognizer = new EigenFaceRecognizer();
         }
 
+        public void Load(string path)
+        {
+            recognizer.Read(path);
+        }
+
         public void Train(IList<(int, Mat)> labeledFaces, string path)
         {
             recognizer.Train(labeledFaces.Select(f => f.Item2).ToArray(), labeledFaces.Select(f => f.Item1).ToArray());

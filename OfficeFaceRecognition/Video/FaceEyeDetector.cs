@@ -14,7 +14,7 @@ namespace OfficeFaceRecognition.Video
             eyeClassifier = new CascadeClassifier(eyeFileName);
         }
 
-        public (List<Rectangle>, List<Rectangle>) Detect(IInputArray image)
+        public (List<Rectangle>, List<Rectangle>) Detect(Mat image)
         {
             var faces = new List<Rectangle>();
             var eyes = new List<Rectangle>();
