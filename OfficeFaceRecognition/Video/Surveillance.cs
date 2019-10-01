@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using Emgu.CV;
@@ -11,6 +12,8 @@ namespace OfficeFaceRecognition.Video
 {
     public class Surveillance
     {
+        private int counter;
+
         private readonly VideoGrab videoGrab;
         private readonly FaceEyeDetector faceEyeDetector;
         private readonly FaceDAL dal;
@@ -41,6 +44,8 @@ namespace OfficeFaceRecognition.Video
         private void OnImageGrabbed(Mat mat)
         {
             ImageGrabbed?.Invoke(mat);
+            //skip 2/3 of the frames, due to too much work on CPU
+            if (counter++ % 3 != 0) return;
             var (faces, eyes) = faceEyeDetector.Detect(mat);
             if (!faces.Any() || !eyes.Any()) return;
             PersonDetected?.Invoke(mat);
