@@ -27,10 +27,10 @@ namespace OfficeFaceRecognition.Video
             faceEyeDetector = new FaceEyeDetector("haarcascade_frontalface_default.xml", "haarcascade_eye.xml");
             dal = new FaceDAL();
             recognitionModule = new FaceRecognitionModule();
-            recognitionModule.Load("Embeddings.trained");
+            //recognitionModule.Load("Embeddings.trained");
             videoGrab.ImageGrabbed += OnImageGrabbed;
             PersonDetected += mat => dal.Save(mat);
-            PersonDetected += mat => PersonRecognized?.Invoke(recognitionModule.Predict(mat));
+            //PersonDetected += mat => PersonRecognized?.Invoke(recognitionModule.Predict(mat));
         }
 
         public void Start()

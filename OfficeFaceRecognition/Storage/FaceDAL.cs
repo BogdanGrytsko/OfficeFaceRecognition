@@ -6,6 +6,7 @@ namespace OfficeFaceRecognition.Storage
     {
         public void Save(Mat mat)
         {
+            DebugHelper.Save(mat.Bitmap);
         }
     }
 }
