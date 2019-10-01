@@ -23,8 +23,13 @@ namespace OfficeFaceRecognition
                 g.DrawRectangle(pen, rect);
             }
 
-            var path = Path.Combine(Environment.CurrentDirectory, $"{OutputPath}\\{index++}.png");
-            copy.Save(path);
+            Save(copy);
+        }
+
+        public static void Save(Bitmap bmp)
+        {
+            var path = Path.Combine(Environment.CurrentDirectory, $"{OutputPath}\\{index++}.{Guid.NewGuid()}.png");
+            bmp.Save(path);
         }
     }
 }

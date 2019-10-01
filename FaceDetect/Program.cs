@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace VideoSurveillance
+namespace FaceDetect
 {
     static class Program
    {
@@ -13,7 +13,7 @@ namespace VideoSurveillance
       {
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
-         Application.Run(new FaceDetect());
+         Application.Run(new VideoSurveillance.FaceDetectForm());
       }
    }
 }

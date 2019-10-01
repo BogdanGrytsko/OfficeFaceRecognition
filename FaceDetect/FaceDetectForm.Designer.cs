@@ -1,6 +1,6 @@
 namespace VideoSurveillance
 {
-   partial class FaceDetect
+   partial class FaceDetectForm
    {
       /// <summary>
       /// Required designer variable.
@@ -29,7 +29,7 @@ namespace VideoSurveillance
       private void InitializeComponent()
       {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FaceDetect));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FaceDetectForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.imageBox1 = new Emgu.CV.UI.ImageBox();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -40,7 +40,6 @@ namespace VideoSurveillance
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.playButton = new System.Windows.Forms.ToolStripButton();
             this.detectionButton = new System.Windows.Forms.ToolStripButton();
-            this.reprocessButton = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -130,8 +129,7 @@ namespace VideoSurveillance
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.playButton,
-            this.detectionButton,
-            this.reprocessButton});
+            this.detectionButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1431, 25);
@@ -165,24 +163,14 @@ namespace VideoSurveillance
             this.detectionButton.ToolTipText = "Detection";
             this.detectionButton.Click += new System.EventHandler(this.detectionButton_Click);
             // 
-            // reprocessButton
-            // 
-            this.reprocessButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.reprocessButton.Image = ((System.Drawing.Image)(resources.GetObject("reprocessButton.Image")));
-            this.reprocessButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.reprocessButton.Name = "reprocessButton";
-            this.reprocessButton.Size = new System.Drawing.Size(64, 22);
-            this.reprocessButton.Text = "Reprocess";
-            this.reprocessButton.Click += new System.EventHandler(this.reprocessButton_Click);
-            // 
-            // FaceDetect
+            // FaceDetectForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1431, 778);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip1);
-            this.Name = "FaceDetect";
+            this.Name = "FaceDetectForm";
             this.Text = "VideoSurveilance";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -212,7 +200,6 @@ namespace VideoSurveillance
       private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton playButton;
-        private System.Windows.Forms.ToolStripButton reprocessButton;
         private System.Windows.Forms.ToolStripButton detectionButton;
     }
 }
