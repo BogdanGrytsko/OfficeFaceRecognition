@@ -1,4 +1,4 @@
-﻿namespace OfficeFaceRecognition.Storage
+﻿namespace FaceRecognition.Storage
 {
     public class ImageLabel
     {

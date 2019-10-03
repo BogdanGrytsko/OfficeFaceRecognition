@@ -3,7 +3,7 @@ using System.Linq;
 using Emgu.CV;
 using Emgu.CV.Face;
 
-namespace OfficeFaceRecognition.BL
+namespace FaceRecognition.BL
 {
     public class FaceRecognitionModule
     {

@@ -2,13 +2,13 @@
 using System.Drawing;
 using System.IO;
 
-namespace OfficeFaceRecognition
+namespace FaceRecognition
 {
     public static class DebugHelper
     {
         private static int index;
         private static readonly Pen pen = new Pen(Color.Red, 2);
-        private const string OutputPath = "output";
+        public const string OutputPath = "output";
 
         static DebugHelper()
         {

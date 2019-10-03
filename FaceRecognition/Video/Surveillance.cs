@@ -4,10 +4,10 @@ using System.Drawing;
 using System.Linq;
 using Emgu.CV;
 using Emgu.CV.Face;
-using OfficeFaceRecognition.BL;
-using OfficeFaceRecognition.Storage;
+using FaceRecognition.BL;
+using FaceRecognition.Storage;
 
-namespace OfficeFaceRecognition.Video
+namespace FaceRecognition.Video
 {
     public class Surveillance
     {

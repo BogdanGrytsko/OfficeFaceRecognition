@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Face;
 using Emgu.CV.Structure;
-using OfficeFaceRecognition.Video;
+using FaceRecognition.Video;
 
 namespace VideoSurveillance
 {

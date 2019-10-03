@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace OfficeFaceRecognition.Storage
+namespace FaceRecognition.Storage
 {
     public interface IImageDAL
     {

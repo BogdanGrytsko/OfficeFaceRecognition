@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommandLine;
-using OfficeFaceRecognition.BL;
-using OfficeFaceRecognition.Storage;
+using FaceRecognition.BL;
+using FaceRecognition.Storage;
 
 namespace OfficeFaceRecognition
 {
@@ -20,7 +20,7 @@ namespace OfficeFaceRecognition
         private static void RunOptions(FaceRecognitionParams facePars)
         {
             var images = new FileSystemDAL(facePars.DataSet).GetImages().ToList();
-            var detectionModule = new DetectionModule(facePars);
+            var detectionModule = new DetectionModule(facePars.EmbeddingModel, facePars.Confidence);
 
             var faces = detectionModule
                 .GetFaces(images)
@@ -38,15 +38,6 @@ namespace OfficeFaceRecognition
                 var testImg = detectionModule.ProcessImage(image.Image);
                 var prediction = recognitionModule.Predict(testImg);
                 Console.WriteLine($"Img name : {image.Label} Prediction: {labelMap.ReverseMap[prediction.Label]}, Dist : {prediction.Distance}");
-            }
-        }
-
-        private static IEnumerable<(string, byte[])> GetImages(string dataSet)
-        {
-            var imagePaths = Directory.GetFiles(dataSet, "*.*", SearchOption.AllDirectories);
-            foreach (var imagePath in imagePaths)
-            {
-                yield return (imagePath, File.ReadAllBytes(imagePath));
             }
         }
 

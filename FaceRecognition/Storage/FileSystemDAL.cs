@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
-namespace OfficeFaceRecognition.Storage
+namespace FaceRecognition.Storage
 {
     public class FileSystemDAL : ITrainDataDAL, IImageDAL
     {
