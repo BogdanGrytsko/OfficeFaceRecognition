@@ -149,9 +149,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OfficeFaceRecognition\OfficeFaceRecognition.csproj">
-      <Project>{343618f4-7dc4-4dd0-a544-e5a6a2e7285c}</Project>
-      <Name>OfficeFaceRecognition</Name>
+    <ProjectReference Include="..\FaceRecognition\FaceRecognition.csproj">
+      <Project>{b82339fa-4dcb-40c7-9c1f-3ed3c1b24e92}</Project>
+      <Name>FaceRecognition</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

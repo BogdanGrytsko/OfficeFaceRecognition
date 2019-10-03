@@ -1,6 +1,6 @@
 ﻿using Emgu.CV;
 
-namespace OfficeFaceRecognition.Storage
+namespace FaceRecognition.Storage
 {
     public class FaceDAL
     {

@@ -7,20 +7,20 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Dnn;
 using Emgu.CV.Structure;
 
-namespace OfficeFaceRecognition.BL
+namespace FaceRecognition.BL
 {
     public class DetectionModule
     {
         private readonly Net detector, embedder;
         private readonly double minConfidence;
 
-        public DetectionModule(FaceRecognitionParams facePars)
+        public DetectionModule(string embeddingModel, double minConfidence)
         {
             Console.WriteLine("[INFO] loading face detector...");
-            detector = GetDetector(facePars);
+            detector = GetDetector();
             Console.WriteLine("[INFO] load serialized face embedding model from disk...");
-            embedder = DnnInvoke.ReadNet(facePars.EmbeddingModel);
-            minConfidence = facePars.Confidence;
+            embedder = DnnInvoke.ReadNet(embeddingModel);
+            this.minConfidence = minConfidence;
         }
 
         public DetectionModule(byte[] proto, byte[] caffeModel, string embeddingModel, double minConfidence)
@@ -94,13 +94,13 @@ namespace OfficeFaceRecognition.BL
             return vec.Reshape(1);
         }
 
-        private static Net GetDetector(FaceRecognitionParams facePars)
+        private static Net GetDetector()
         {
-            var protoPath = Path.Combine(facePars.Detector, "deploy.prototxt");
-            var modelPath = Path.Combine(facePars.Detector, "res10_300x300_ssd_iter_140000.caffemodel");
-            return DnnInvoke.ReadNetFromCaffe(protoPath, modelPath);
+            var proto = Utils.GetResourceBytes("Models.deploy.prototxt");
+            var model = Utils.GetResourceBytes("Models.res10_300x300_ssd_iter_140000.caffemodel");
+            return DnnInvoke.ReadNetFromCaffe(proto, model);
         }
-
+        
         private static int GetMaxConfidenceIdx(Mat detection, float[,,,] data)
         {
             var maxi = 0;

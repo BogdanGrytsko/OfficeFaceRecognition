@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommandLine;
-using OfficeFaceRecognition.BL;
+using FaceRecognition.BL;
 
 namespace OfficeFaceRecognition
 {
@@ -19,7 +19,7 @@ namespace OfficeFaceRecognition
         private static void RunOptions(FaceRecognitionParams facePars)
         {
             var images = GetImages(facePars.DataSet).ToList();
-            var detectionModule = new DetectionModule(facePars);
+            var detectionModule = new DetectionModule(facePars.EmbeddingModel, facePars.Confidence);
 
             var faces = detectionModule
                 .GetFaces(images)

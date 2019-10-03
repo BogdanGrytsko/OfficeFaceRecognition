@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 
-namespace OfficeFaceRecognition
+namespace FaceRecognition
 {
     public static class DebugHelper
     {

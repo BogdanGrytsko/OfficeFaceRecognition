@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using Emgu.CV;
 
-namespace OfficeFaceRecognition.Video
+namespace FaceRecognition.Video
 {
     public class VideoGrab : IVideoGrab
     {

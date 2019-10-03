@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace OfficeFaceRecognition.BL
+namespace FaceRecognition.BL
 {
     public class LabelMap
     {

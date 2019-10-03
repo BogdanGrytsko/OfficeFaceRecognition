@@ -1,7 +1,7 @@
 ﻿using Emgu.CV;
 using System;
 
-namespace OfficeFaceRecognition.Video
+namespace FaceRecognition.Video
 {
     public interface IVideoGrab
     {
