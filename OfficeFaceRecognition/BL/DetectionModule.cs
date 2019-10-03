@@ -6,6 +6,7 @@ using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Dnn;
 using Emgu.CV.Structure;
+using OfficeFaceRecognition.Storage;
 
 namespace OfficeFaceRecognition.BL
 {
@@ -31,16 +32,16 @@ namespace OfficeFaceRecognition.BL
             this.minConfidence = minConfidence;
         }
 
-        public IEnumerable<(string, Mat)> GetFaces(IEnumerable<(string, byte[])> images)
+        public IEnumerable<(string, Mat)> GetFaces(IEnumerable<ImageLabel> images)
         {
             Console.WriteLine("[INFO] quantifying faces...");
-            foreach (var (name, bytes) in images)
+            foreach (var image in images)
             {
-                Console.WriteLine($"Processing image {name}");
+                Console.WriteLine($"Processing image {image.Label}");
 
-                var res = ProcessImage(bytes);
+                var res = ProcessImage(image.Image);
                 if (res != null)
-                    yield return (name, res);
+                    yield return (image.Label, res);
             }
         }
 
