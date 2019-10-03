@@ -23,36 +23,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Remove="C:\Users\bvsev\.nuget\packages\emgu.cv\4.1.1.3497\build\x64\vcruntime140.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\bvsev\.nuget\packages\emgu.cv\4.1.1.3497\build\x64\opencv_videoio_ffmpeg411_64.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\bvsev\.nuget\packages\emgu.cv\4.1.1.3497\build\x64\msvcp140.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\bvsev\.nuget\packages\emgu.cv\4.1.1.3497\build\x64\cvextern.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\bvsev\.nuget\packages\emgu.cv\4.1.1.3497\build\x64\concrt140.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\bvsev\.nuget\packages\emgu.cv\4.1.1.3497\build\x86\vcruntime140.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\bvsev\.nuget\packages\emgu.cv\4.1.1.3497\build\x86\opencv_videoio_ffmpeg411.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\bvsev\.nuget\packages\emgu.cv\4.1.1.3497\build\x86\msvcp140.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\bvsev\.nuget\packages\emgu.cv\4.1.1.3497\build\x86\cvextern.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\bvsev\.nuget\packages\emgu.cv\4.1.1.3497\build\x86\concrt140.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\FaceRecognition\FaceRecognition.csproj" />
   </ItemGroup>
 </Project>
