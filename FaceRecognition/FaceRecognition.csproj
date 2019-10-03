@@ -19,4 +19,10 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Models\openface_nn4.small2.v1.t7">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
