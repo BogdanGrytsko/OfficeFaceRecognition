@@ -26,7 +26,10 @@ namespace OfficeFaceRecognition.Video
 
         public Surveillance()
         {
-            videoGrab = new VideoGrab("rtsp://admin:Face1234@192.168.5.49:554/onvif1");
+            //new camera
+            videoGrab = new VideoGrab("rtsp://192.168.5.5:8554/mjpeg/1");
+            //old camera
+            //videoGrab = new VideoGrab("rtsp://admin:Face1234@192.168.5.49:554/onvif1");
             faceEyeDetector = new FaceEyeDetector("haarcascade_frontalface_default.xml", "haarcascade_eye.xml");
             dal = new FaceDAL();
             recognitionModule = new FaceRecognitionModule();
@@ -45,7 +48,7 @@ namespace OfficeFaceRecognition.Video
         {
             ImageGrabbed?.Invoke(mat);
             //skip 2/3 of the frames, due to too much work on CPU
-            if (counter++ % 3 != 0) return;
+            //if (counter++ % 3 != 0) return;
             var (faces, eyes) = faceEyeDetector.Detect(mat);
             if (!faces.Any() || !eyes.Any()) return;
             PersonDetected?.Invoke(mat);
