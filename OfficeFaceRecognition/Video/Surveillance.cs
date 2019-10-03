@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using Emgu.CV;
@@ -12,9 +11,10 @@ namespace OfficeFaceRecognition.Video
 {
     public class Surveillance
     {
+        private const string oldCamera = "rtsp://admin:Face1234@192.168.5.49:554/onvif1", newCamera = "rtsp://192.168.5.5:8554/mjpeg/1";
         private int counter;
 
-        private readonly VideoGrab videoGrab;
+        private readonly IVideoGrab videoGrab;
         private readonly FaceEyeDetector faceEyeDetector;
         private readonly FaceDAL dal;
         private readonly FaceRecognitionModule recognitionModule;
@@ -26,10 +26,8 @@ namespace OfficeFaceRecognition.Video
 
         public Surveillance()
         {
-            //new camera
-            videoGrab = new VideoGrab("rtsp://192.168.5.5:8554/mjpeg/1");
-            //old camera
-            //videoGrab = new VideoGrab("rtsp://admin:Face1234@192.168.5.49:554/onvif1");
+            videoGrab = new VideoGrab(newCamera);
+            //videoGrab = new VideoGrab();
             faceEyeDetector = new FaceEyeDetector("haarcascade_frontalface_default.xml", "haarcascade_eye.xml");
             dal = new FaceDAL();
             recognitionModule = new FaceRecognitionModule();

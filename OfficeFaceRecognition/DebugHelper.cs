@@ -28,7 +28,9 @@ namespace OfficeFaceRecognition
 
         public static void Save(Bitmap bmp)
         {
-            var path = Path.Combine(Environment.CurrentDirectory, OutputPath, DateTime.UtcNow.ToShortDateString(), $"{index++}.{Guid.NewGuid()}.png");
+            var directory = Path.Combine(Environment.CurrentDirectory, OutputPath, DateTime.UtcNow.ToShortDateString());
+            var path = Path.Combine(directory, $"{index++}.{Guid.NewGuid()}.png");
+            Directory.CreateDirectory(directory);
             bmp.Save(path);
         }
     }
