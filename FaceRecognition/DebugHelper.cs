@@ -1,6 +1,6 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
+using FaceRecognition.Storage;
 
 namespace FaceRecognition
 {
@@ -9,11 +9,6 @@ namespace FaceRecognition
         private static int index;
         private static readonly Pen pen = new Pen(Color.Red, 2);
         public const string OutputPath = "output";
-
-        static DebugHelper()
-        {
-            Directory.CreateDirectory(OutputPath);
-        }
 
         public static void DrawFaceRectAndSave(Bitmap bmp, Rectangle rect)
         {
@@ -28,10 +23,16 @@ namespace FaceRecognition
 
         public static void Save(Bitmap bmp)
         {
-            var directory = Path.Combine(Environment.CurrentDirectory, OutputPath, DateTime.UtcNow.ToShortDateString());
-            var path = Path.Combine(directory, $"{index++}.{Guid.NewGuid()}.png");
-            Directory.CreateDirectory(directory);
-            bmp.Save(path);
+            new FileSystemDAL(OutputPath).Add(new ImageLabel(index++.ToString(), GetBytes(bmp) ));
+        }
+
+        private static byte[] GetBytes(Bitmap bmp)
+        {
+            using (var stream = new MemoryStream())
+            {
+                bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                return stream.ToArray();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace FaceRecognition.Storage
@@ -33,7 +34,10 @@ namespace FaceRecognition.Storage
 
         public void Add(ImageLabel image)
         {
-            throw new System.NotImplementedException();
+            var timedDirectory = Path.Combine(Environment.CurrentDirectory, directory, DateTime.UtcNow.ToString("yyyy.MM.dd"));
+            var path = Path.Combine(timedDirectory, $"{DateTime.UtcNow:HH-mm-ss}.{image.Label}.png");
+            Directory.CreateDirectory(timedDirectory);
+            File.WriteAllBytes(path, image.Image);
         }
 
         public void Delete(int id)

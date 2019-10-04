@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Face;
 using Emgu.CV.Structure;
+using FaceRecognition;
+using FaceRecognition.Storage;
 using FaceRecognition.Video;
 
 namespace VideoSurveillance
@@ -17,7 +19,7 @@ namespace VideoSurveillance
         public FaceDetectForm()
         {
             InitializeComponent();
-            surveillance = new Surveillance();
+            surveillance = new Surveillance(new FileSystemDAL(DebugHelper.OutputPath));
             Run();
         }
 

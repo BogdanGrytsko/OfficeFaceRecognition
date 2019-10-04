@@ -16,7 +16,7 @@ namespace FaceRecognition.Video
 
         private readonly IVideoGrab videoGrab;
         private readonly FaceEyeDetector faceEyeDetector;
-        private readonly FaceDAL dal;
+        private readonly ITrainDataDAL trainDataDAL;
         private readonly FaceRecognitionModule recognitionModule;
 
         public event Action<Mat, List<Rectangle>, List<Rectangle>> FaceDetected;
@@ -24,16 +24,17 @@ namespace FaceRecognition.Video
         public event Action<Mat> ImageGrabbed;
         public event Action<FaceRecognizer.PredictionResult> PersonRecognized;
 
-        public Surveillance()
+        public Surveillance(ITrainDataDAL trainDataDAL)
         {
-            videoGrab = new VideoGrab(newCamera);
+            this.trainDataDAL = trainDataDAL;
+            //videoGrab = new VideoGrab(newCamera);
             //videoGrab = new VideoGrab();
-            faceEyeDetector = new FaceEyeDetector("haarcascade_frontalface_default.xml", "haarcascade_eye.xml");
-            dal = new FaceDAL();
+            videoGrab = new MockVideoGrab(trainDataDAL.GetImages().Take(100).ToList(), TimeSpan.FromMilliseconds(150));
+            faceEyeDetector = new FaceEyeDetector("Models\\haarcascade_frontalface_default.xml", "Models\\haarcascade_eye.xml");
             recognitionModule = new FaceRecognitionModule();
             //recognitionModule.Load("Embeddings.trained");
             videoGrab.ImageGrabbed += OnImageGrabbed;
-            PersonDetected += mat => dal.Save(mat);
+            PersonDetected += mat => DebugHelper.Save(mat.Bitmap);
             //PersonDetected += mat => PersonRecognized?.Invoke(recognitionModule.Predict(mat));
         }
 
