@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using CommonObjects;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Dnn;
 using Emgu.CV.Structure;
-using FaceRecognition.Storage;
 
 namespace FaceRecognition.BL
 {
@@ -31,7 +31,7 @@ namespace FaceRecognition.BL
             this.minConfidence = minConfidence;
         }
 
-        public IEnumerable<(string, Mat)> GetFaces(IEnumerable<ImageLabel> images)
+        public IEnumerable<(string, Mat)> GetFaces(IEnumerable<IImageLabel> images)
         {
             Console.WriteLine("[INFO] quantifying faces...");
             foreach (var image in images)

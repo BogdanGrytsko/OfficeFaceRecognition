@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace FaceRecognition.Storage
+namespace CommonObjects
 {
     public interface ILogCommand
     {
-        int CommandId { get; set; }
+        int LogCommandId { get; set; }
         DateTime StartCommandDate { get; set; }
         DateTime FinishCommandDate { get; set; }
         CommandTypes CommandType { get; }

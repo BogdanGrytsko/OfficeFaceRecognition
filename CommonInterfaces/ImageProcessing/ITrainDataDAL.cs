@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace FaceRecognition.Storage
+namespace CommonObjects
 {
     public interface ITrainDataDAL
     {
-        IEnumerable<ImageLabel> GetImages();
+        IEnumerable<IImageLabel> GetImages();
     }
 }

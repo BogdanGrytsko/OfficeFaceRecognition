@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace FaceRecognition.Storage
+namespace CommonObjects
 {
     public interface ILogRecognition
     {
-        int Id { get; }
+        int LogRecognitionId { get; }
         int RecognizedUserId { get; }
         DateTime RecognitionDate { get; }
-        ImageLabel RecognizedImageLabel { get; set; }
+        IImageLabel ImageLabel { get; set; }
         double RecognitionConfidance { get; }
     }
 }

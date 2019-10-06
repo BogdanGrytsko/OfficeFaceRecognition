@@ -1,14 +1,17 @@
-﻿using System;
+﻿using CommonObjects;
+using System;
 
-namespace FaceRecognition.Storage
+namespace FaceRecognitionDatabase
 {
     public class LogCommand : ILogCommand
     {
+        public LogCommand() { }
         public LogCommand(CommandTypes commandType)
         {
             CommandType = commandType;
         }
-        public int CommandId { get; set; }
+
+        public int LogCommandId { get; set; }
         public DateTime StartCommandDate { get; set; }
         public DateTime FinishCommandDate { get; set; }
         public CommandTypes CommandType { get; }

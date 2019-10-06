@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FaceRecognition.Storage
+namespace CommonObjects
 {
     public interface ILogCommandDAL
     {

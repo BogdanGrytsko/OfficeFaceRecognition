@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using CommonObjects;
 using Emgu.CV;
 using Emgu.CV.Face;
 using FaceRecognition.BL;
-using FaceRecognition.Storage;
 
 namespace FaceRecognition.Video
 {
@@ -28,8 +28,8 @@ namespace FaceRecognition.Video
         {
             this.trainDataDAL = trainDataDAL;
             //videoGrab = new VideoGrab(newCamera);
-            //videoGrab = new VideoGrab();
-            videoGrab = new MockVideoGrab(trainDataDAL.GetImages().Take(100).ToList(), TimeSpan.FromMilliseconds(150));
+            videoGrab = new VideoGrab();
+            //videoGrab = new MockVideoGrab(trainDataDAL.GetImages().Take(100).ToList(), TimeSpan.FromMilliseconds(150));
             faceEyeDetector = new FaceEyeDetector("Models\\haarcascade_frontalface_default.xml", "Models\\haarcascade_eye.xml");
             recognitionModule = new FaceRecognitionModule();
             //recognitionModule.Load("Embeddings.trained");

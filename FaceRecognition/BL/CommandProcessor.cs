@@ -1,4 +1,5 @@
-﻿using FaceRecognition.Storage;
+﻿using CommonObjects;
+using FaceRecognition.Storage;
 using System;
 
 namespace FaceRecognition.BL

@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.IO;
+using CommonObjects;
 using FaceRecognition.Storage;
 
 namespace FaceRecognition
@@ -23,7 +24,7 @@ namespace FaceRecognition
 
         public static void Save(Bitmap bmp)
         {
-            new FileSystemDAL(OutputPath).Add(new ImageLabel(index++.ToString(), GetBytes(bmp) ));
+            new FileSystemDAL(OutputPath).Add(new ImageLabel(index++.ToString(), GetBytes(bmp) ) as IImageLabel);
         }
 
         private static byte[] GetBytes(Bitmap bmp)

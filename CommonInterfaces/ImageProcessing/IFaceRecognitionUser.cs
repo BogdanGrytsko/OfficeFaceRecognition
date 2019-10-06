@@ -1,9 +1,9 @@
-﻿namespace FaceRecognition.Storage
+﻿namespace CommonObjects
 {
     public interface IFaceRecognitionUser
     {
         int UserId { get; set; }
         CommandTypes DefaultCommand { get; set; }
-        ILabel UserLabel { get; set; }
+        IUserLabel UserLabel { get; set; }
     }
 }

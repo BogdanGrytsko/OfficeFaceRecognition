@@ -30,6 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CommonInterfaces\CommonObjects.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
 

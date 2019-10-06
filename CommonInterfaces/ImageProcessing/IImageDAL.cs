@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 
-namespace FaceRecognition.Storage
+namespace CommonObjects
 {
     public interface IImageDAL
     {
-        ImageLabel Get(int id);
+        IImageLabel Get(int id);
 
-        void Add(IEnumerable<ImageLabel> images);
+        void Add(IEnumerable<IImageLabel> images);
 
-        void Add(ImageLabel image);
+        void Add(IImageLabel image);
 
         void Delete(int id);
 

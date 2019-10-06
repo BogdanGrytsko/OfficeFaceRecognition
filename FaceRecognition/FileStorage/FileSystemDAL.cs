@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommonObjects;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -13,26 +14,26 @@ namespace FaceRecognition.Storage
             this.directory = directory;
         }
 
-        public IEnumerable<ImageLabel> GetImages()
+        public IEnumerable<IImageLabel> GetImages()
         {
             var imagePaths = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories);
             foreach (var imagePath in imagePaths)
             {
-                yield return new ImageLabel(imagePath, File.ReadAllBytes(imagePath));
+                yield return new ImageLabel(imagePath, File.ReadAllBytes(imagePath)) as IImageLabel;
             }
         }
 
-        public ImageLabel Get(int id)
+        public IImageLabel Get(int id)
         {
             throw new System.NotImplementedException();
         }
 
-        public void Add(IEnumerable<ImageLabel> images)
+        public void Add(IEnumerable<IImageLabel> images)
         {
             throw new System.NotImplementedException();
         }
 
-        public void Add(ImageLabel image)
+        public void Add(IImageLabel image)
         {
             var timedDirectory = Path.Combine(Environment.CurrentDirectory, directory, DateTime.UtcNow.ToString("yyyy.MM.dd"));
             var path = Path.Combine(timedDirectory, $"{DateTime.UtcNow:HH-mm-ss}.{image.Label}.png");

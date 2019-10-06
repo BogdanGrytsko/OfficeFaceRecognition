@@ -1,5 +1,5 @@
 ﻿
-namespace FaceRecognition.Storage
+namespace CommonObjects
 {
     public enum CommandResults
     {
