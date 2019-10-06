@@ -6,7 +6,7 @@ namespace FaceRecognition.Storage
     {
         int Id { get; }
         int RecognizedUserId { get; }
-        DateTime RecognitionDate { get; } 
+        DateTime RecognitionDate { get; }
         ImageLabel RecognizedImageLabel { get; set; }
         double RecognitionConfidance { get; }
     }
