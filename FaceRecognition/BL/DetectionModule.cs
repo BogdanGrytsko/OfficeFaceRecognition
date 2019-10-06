@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using CommonObjects;
 using Emgu.CV;
-using Emgu.CV.CvEnum;
 using Emgu.CV.Dnn;
 using Emgu.CV.Structure;
 
@@ -38,16 +37,20 @@ namespace FaceRecognition.BL
             {
                 Console.WriteLine($"Processing image {image.Label}");
 
-                var res = ProcessImage(image.Image);
+                var res = GetFaceEmbedding(image.Image);
                 if (res != null)
                     yield return (image.Label, res);
             }
         }
 
-        public Mat ProcessImage(byte[] byteImage)
+        public Mat GetFaceEmbedding(byte[] byteImage)
         {
-            var image = new Mat();
-            CvInvoke.Imdecode(byteImage, ImreadModes.AnyColor, image);
+            var image = Utils.GetMat(byteImage);
+            return GetFaceEmbedding(image);
+        }
+
+        public Mat GetFaceEmbedding(Mat image)
+        {
             //#load the image, resize it to have a width of 600 pixels (while
             //# maintaining the aspect ratio), and then grab the image dimension
 
@@ -60,7 +63,7 @@ namespace FaceRecognition.BL
                 resizedThreeHundred, 1, new Size(300, 300), new MCvScalar(104.0, 177.0, 123.0));
             detector.SetInput(blobFromImage);
             var detection = detector.Forward();
-            var data = (float[,,,]) detection.GetData();
+            var data = (float[,,,])detection.GetData();
             //ensure at least one face was found
             if (data.Length == 0) return null;
 

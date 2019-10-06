@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace FaceRecognition.Storage
 {
@@ -21,6 +22,15 @@ namespace FaceRecognition.Storage
             {
                 yield return new ImageLabel(imagePath, File.ReadAllBytes(imagePath)) as IImageLabel;
             }
+        }
+
+        public Dictionary<string, int> GetLabelMap()
+        {
+            var dirs = Directory.GetDirectories(directory);
+            var idx = 1;
+            var dic = dirs.ToDictionary(n => n, n => idx++);
+            dic["unknown"] = 0;
+            return dic;
         }
 
         public IImageLabel Get(int id)

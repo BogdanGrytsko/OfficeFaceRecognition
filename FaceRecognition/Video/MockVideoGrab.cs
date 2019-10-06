@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using CommonObjects;
 using Emgu.CV;
-using Emgu.CV.CvEnum;
-using FaceRecognition.Storage;
+using FaceRecognition.BL;
 
 namespace FaceRecognition.Video
 {
@@ -11,12 +11,12 @@ namespace FaceRecognition.Video
     {
         public event Action<Mat> ImageGrabbed;
 
-        private readonly List<ImageLabel> images;
+        private readonly List<IImageLabel> images;
         private readonly Timer timer;
         private readonly TimeSpan period;
         private int currImgIdx;
 
-        public MockVideoGrab(List<ImageLabel> images, TimeSpan period)
+        public MockVideoGrab(List<IImageLabel> images, TimeSpan period)
         {
             this.images = images;
             this.period = period;
@@ -30,14 +30,17 @@ namespace FaceRecognition.Video
                 currImgIdx = 0;
             else
                 currImgIdx++;
-            var mat = new Mat();
-            CvInvoke.Imdecode(img.Image, ImreadModes.AnyColor, mat);
-            ImageGrabbed?.Invoke(mat);
+            ImageGrabbed?.Invoke(Utils.GetMat(img.Image));
         }
 
         public void Start()
         {
             timer.Change(TimeSpan.Zero, period);
+        }
+
+        public void Pause()
+        {
+            timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         }
     }
 }

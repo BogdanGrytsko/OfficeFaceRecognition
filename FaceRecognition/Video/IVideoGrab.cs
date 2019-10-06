@@ -8,5 +8,7 @@ namespace FaceRecognition.Video
         event Action<Mat> ImageGrabbed;
 
         void Start();
+
+        void Pause();
     }
 }
