@@ -4,43 +4,84 @@ using System.Drawing;
 using System.Linq;
 using CommonObjects;
 using Emgu.CV;
-using Emgu.CV.Face;
 using FaceRecognition.BL;
 
 namespace FaceRecognition.Video
 {
     public class Surveillance
     {
-        private const string oldCamera = "rtsp://admin:Face1234@192.168.5.49:554/onvif1", newCamera = "rtsp://192.168.5.5:8554/mjpeg/1";
+        private const string trainedModel = "Embeddings.trained", faceEmbeddingsModel = "Models\\openface_nn4.small2.v1.t7";
         private int counter;
 
         private readonly IVideoGrab videoGrab;
-        private readonly FaceEyeDetector faceEyeDetector;
         private readonly ITrainDataDAL trainDataDAL;
         private readonly FaceRecognitionModule recognitionModule;
+        private readonly FaceEyeDetector faceEyeDetector;
+        private readonly DetectionModule detectionModule;
+        private readonly double confidence;
+        private LabelMap labelMap;
 
         public event Action<Mat, List<Rectangle>, List<Rectangle>> FaceDetected;
         private event Action<Mat> PersonDetected;
         public event Action<Mat> ImageGrabbed;
-        public event Action<FaceRecognizer.PredictionResult> PersonRecognized;
 
-        public Surveillance(ITrainDataDAL trainDataDAL)
+        public Surveillance(IVideoGrab videoGrab, ITrainDataDAL trainDataDAL, double confidence = 0.5)
         {
+            this.videoGrab = videoGrab;
             this.trainDataDAL = trainDataDAL;
-            //videoGrab = new VideoGrab(newCamera);
-            videoGrab = new VideoGrab();
-            //videoGrab = new MockVideoGrab(trainDataDAL.GetImages().Take(100).ToList(), TimeSpan.FromMilliseconds(150));
+            this.confidence = confidence;
             faceEyeDetector = new FaceEyeDetector("Models\\haarcascade_frontalface_default.xml", "Models\\haarcascade_eye.xml");
             recognitionModule = new FaceRecognitionModule();
-            //recognitionModule.Load("Embeddings.trained");
+            detectionModule = new DetectionModule(faceEmbeddingsModel, confidence);
+            recognitionModule.Load(trainedModel);
+            labelMap = new LabelMap(trainDataDAL.GetLabelMap());
             videoGrab.ImageGrabbed += OnImageGrabbed;
-            PersonDetected += mat => DebugHelper.Save(mat.Bitmap);
-            //PersonDetected += mat => PersonRecognized?.Invoke(recognitionModule.Predict(mat));
+            PersonDetected += OnPersonDetected;
+        }
+
+        private void OnPersonDetected(Mat mat)
+        {
+            var (distance, label) = Predict(mat);
+            if (distance >= confidence)
+                RecognitionFail(distance, label);
+            else
+                RecognitionSuccess(distance, label);
+        }
+
+        public (double, string) Predict(Mat mat)
+        {
+            var faceEmb = detectionModule.GetFaceEmbedding(mat);
+            if (faceEmb == null)
+                return (1, "Couldn't extract face embedding");
+            var prediction = recognitionModule.Predict(faceEmb);
+            return (prediction.Distance, labelMap.ReverseMap[prediction.Label]);
+        }
+
+        private void RecognitionSuccess(double distance, string label)
+        {
+            Console.WriteLine($"Success : {label}, Dist : {distance}");
+        }
+
+        private void RecognitionFail(double distance, string label)
+        {
+            Console.WriteLine($"Failure : {label}, Dist : {distance}");
         }
 
         public void Start()
         {
             videoGrab.Start();
+        }
+
+        public void Train()
+        {
+            videoGrab.Pause();
+            var images = trainDataDAL.GetImages().ToList();
+            labelMap = new LabelMap(trainDataDAL.GetLabelMap());
+            var faceEmbeddings = images
+                .Select(img => (labelMap.Map[img.Label], detectionModule.GetFaceEmbedding(img.Image)))
+                .Where(tuple => tuple.Item2 != null)
+                .ToList();
+            recognitionModule.Train(faceEmbeddings, trainedModel);
         }
 
         private void OnImageGrabbed(Mat mat)

@@ -1,6 +1,9 @@
-﻿namespace FaceRecognition.BL
+﻿using Emgu.CV;
+using Emgu.CV.CvEnum;
+
+namespace FaceRecognition.BL
 {
-    internal static class Utils
+    public static class Utils
     {
         public static byte[] GetResourceBytes(string filename)
         {
@@ -12,6 +15,13 @@
                 stream.Read(bytes, 0, bytes.Length);
                 return bytes;
             }
+        }
+
+        public static Mat GetMat(byte[] bytes)
+        {
+            var mat = new Mat();
+            CvInvoke.Imdecode(bytes, ImreadModes.AnyColor, mat);
+            return mat;
         }
     }
 }

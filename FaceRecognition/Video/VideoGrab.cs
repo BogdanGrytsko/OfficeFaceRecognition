@@ -36,6 +36,11 @@ namespace FaceRecognition.Video
             videoCapture.Start();
         }
 
+        public void Pause()
+        {
+            videoCapture.Pause();
+        }
+
         private void OnImageGrabbed(object sender, EventArgs e)
         {
             var mat = new Mat();

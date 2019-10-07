@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using CommandLine;
 using FaceRecognition.BL;
 using FaceRecognition.Storage;
+using FaceRecognition.Video;
 
 namespace OfficeFaceRecognition
 {
@@ -19,31 +19,16 @@ namespace OfficeFaceRecognition
 
         private static void RunOptions(FaceRecognitionParams facePars)
         {
-            var images = new FileSystemDAL(facePars.DataSet).GetImages().ToList();
-            var detectionModule = new DetectionModule(facePars.EmbeddingModel, facePars.Confidence);
-
-            var faces = detectionModule
-                .GetFaces(images)
-                .Select(f => (GetPersonName(f.Item1), f.Item2))
-                .ToList();
-            var labelMap = new LabelMap(faces.Select(f => f.Item1).Distinct());
-            var labeledFaces = faces.Select(f => (labelMap.Map[f.Item1], f.Item2));
+            var surveillance = new Surveillance(VideoGrabFactory.GetMockCamera(), new FileSystemDAL(facePars.DataSet), facePars.Confidence);
+            surveillance.Train();
 
             var testImages = new FileSystemDAL(facePars.TestSet).GetImages().ToList();
-            var recognitionModule = new FaceRecognitionModule();
-            recognitionModule.Train(labeledFaces.ToList(), facePars.Embeddings);
 
             foreach (var image in testImages)
             {
-                var testImg = detectionModule.ProcessImage(image.Image);
-                var prediction = recognitionModule.Predict(testImg);
-                Console.WriteLine($"Img name : {image.Label} Prediction: {labelMap.ReverseMap[prediction.Label]}, Dist : {prediction.Distance}");
+                var (distance, label) = surveillance.Predict(Utils.GetMat(image.Image));
+                Console.WriteLine($"Img name : {image.Label} Prediction: {label}, Dist : {distance}");
             }
-        }
-
-        private static string GetPersonName(string imagePath)
-        {
-            return Path.GetFileName(Path.GetDirectoryName(imagePath));
         }
 
         private static void HandleParseError(IEnumerable<Error> errors)

@@ -19,7 +19,7 @@ namespace VideoSurveillance
         public FaceDetectForm()
         {
             InitializeComponent();
-            surveillance = new Surveillance(new FileSystemDAL(DebugHelper.OutputPath));
+            surveillance = new Surveillance(VideoGrabFactory.GetSelfCamera(), new FileSystemDAL(DebugHelper.OutputPath));
             Run();
         }
 
@@ -27,7 +27,6 @@ namespace VideoSurveillance
         {
             surveillance.ImageGrabbed += SurveillanceOnImageGrabbed;
             surveillance.FaceDetected += SurveillanceOnFaceDetected;
-            surveillance.PersonRecognized += SurveillanceOnPersonRecognized;
             surveillance.Start();
         }
 
@@ -47,11 +46,6 @@ namespace VideoSurveillance
                 CvInvoke.Rectangle(frame, eye, new Bgr(Color.Blue).MCvScalar, 2);
 
             imageBox1.Image = frame;
-        }
-
-        private void SurveillanceOnPersonRecognized(FaceRecognizer.PredictionResult prediction)
-        {
-            Console.WriteLine($"{prediction.Label}, {prediction.Distance}");
         }
 
         private void playButton_Click(object sender, EventArgs e)

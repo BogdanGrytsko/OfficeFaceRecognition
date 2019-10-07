@@ -5,12 +5,10 @@ namespace FaceRecognition.BL
 {
     public class LabelMap
     {
-        public LabelMap(IEnumerable<string> names)
+        public LabelMap(Dictionary<string, int> map)
         {
-            var idx = 1;
-            Map = names.Distinct().ToDictionary(n => n, n => idx++);
-            Map["unknown"] = 0;
-            ReverseMap = Map.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+            Map = map;
+            ReverseMap = map.ToDictionary(k => k.Value, k => k.Key);
         }
 
         public Dictionary<string, int> Map { get; set; }
