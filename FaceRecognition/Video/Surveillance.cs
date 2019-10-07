@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -59,11 +60,13 @@ namespace FaceRecognition.Video
 
         private void RecognitionSuccess(double distance, string label)
         {
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"Success : {label}, Dist : {distance}");
         }
 
         private void RecognitionFail(double distance, string label)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Failure : {label}, Dist : {distance}");
         }
 
@@ -100,6 +103,8 @@ namespace FaceRecognition.Video
 
         private void OnImageGrabbed(Mat mat)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             ImageGrabbed?.Invoke(mat);
             //skip 2/3 of the frames, due to too much work on CPU
             //if (counter++ % 3 != 0) return;
@@ -107,6 +112,7 @@ namespace FaceRecognition.Video
             if (!faces.Any() || !eyes.Any()) return;
             PersonDetected?.Invoke(mat);
             FaceDetected?.Invoke(mat, faces, eyes);
+            Console.WriteLine($"Frame processing time : {sw.Elapsed}");
         }
     }
 }
