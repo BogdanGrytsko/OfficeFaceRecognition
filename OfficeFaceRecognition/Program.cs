@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CommandLine;
+using FaceRecognition;
 using FaceRecognition.BL;
 using FaceRecognition.Storage;
 using FaceRecognition.Video;
@@ -19,10 +20,17 @@ namespace OfficeFaceRecognition
 
         private static void RunOptions(FaceRecognitionParams facePars)
         {
-            var surveillance = new Surveillance(VideoGrabFactory.GetMockCamera(), new FileSystemDAL(facePars.DataSet), facePars.Confidence);
+            var surveillance = new Surveillance(
+                VideoGrabFactory.GetMockCamera(facePars.TestSet), new FileSystemDAL(facePars.DataSet), facePars.Confidence);
             surveillance.EnsureTrained();
+            surveillance.Start();
+            //RunTestData(surveillance, DebugHelper.OutputPath);
+            Console.ReadKey();
+        }
 
-            var testImages = new FileSystemDAL(facePars.TestSet).GetImages().ToList();
+        private static void RunTestData(Surveillance surveillance, string testSet)
+        {
+            var testImages = new FileSystemDAL(testSet).GetImages().ToList();
 
             foreach (var image in testImages)
             {
