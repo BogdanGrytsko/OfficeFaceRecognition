@@ -26,7 +26,7 @@ namespace FaceRecognition.Video
         public static IVideoGrab GetMockCamera(string path)
         {
             var trainDataDAL = new FileSystemDAL(path);
-            return new MockVideoGrab(trainDataDAL.GetImages().Take(100).ToList(), TimeSpan.FromMilliseconds(150));
+            return new MockVideoGrab(trainDataDAL.GetImages().Take(100).ToList(), TimeSpan.FromMilliseconds(250));
         }
     }
 }
