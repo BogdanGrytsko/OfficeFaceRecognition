@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using CommonObjects;
 using Emgu.CV;
@@ -33,7 +34,6 @@ namespace FaceRecognition.Video
             faceEyeDetector = new FaceEyeDetector("Models\\haarcascade_frontalface_default.xml", "Models\\haarcascade_eye.xml");
             recognitionModule = new FaceRecognitionModule();
             detectionModule = new DetectionModule(faceEmbeddingsModel, confidence);
-            recognitionModule.Load(trainedModel);
             labelMap = new LabelMap(trainDataDAL.GetLabelMap());
             videoGrab.ImageGrabbed += OnImageGrabbed;
             PersonDetected += OnPersonDetected;
@@ -82,6 +82,20 @@ namespace FaceRecognition.Video
                 .Where(tuple => tuple.Item2 != null)
                 .ToList();
             recognitionModule.Train(faceEmbeddings, trainedModel);
+        }
+
+        public void EnsureTrained()
+        {
+            if (File.Exists(trainedModel))
+            {
+                Console.WriteLine("[INFO] Model exists, loading");
+                recognitionModule.Load(trainedModel);
+            }
+            else
+            {
+                Console.WriteLine("[INFO] Model doesn't exist, started training");
+                Train();
+            }
         }
 
         private void OnImageGrabbed(Mat mat)
