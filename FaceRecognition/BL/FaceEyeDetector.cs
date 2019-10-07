@@ -2,7 +2,7 @@
 using System.Drawing;
 using Emgu.CV;
 
-namespace FaceRecognition.Video
+namespace FaceRecognition.BL
 {
     public class FaceEyeDetector
     {

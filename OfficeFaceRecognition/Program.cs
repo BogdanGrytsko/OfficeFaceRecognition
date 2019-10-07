@@ -20,6 +20,7 @@ namespace OfficeFaceRecognition
 
         private static void RunOptions(FaceRecognitionParams facePars)
         {
+            var c = new CudaFaceEyeDetector("a", "b");
             var surveillance = new Surveillance(
                 VideoGrabFactory.GetMockCamera(facePars.TestSet), new FileSystemDAL(facePars.DataSet), facePars.Confidence);
             surveillance.EnsureTrained();
