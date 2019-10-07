@@ -20,7 +20,8 @@ namespace FaceRecognition.Storage
             var imagePaths = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories);
             foreach (var imagePath in imagePaths)
             {
-                yield return new ImageLabel(imagePath, File.ReadAllBytes(imagePath)) as IImageLabel;
+                var label = Path.GetFileName(Path.GetDirectoryName(imagePath));
+                yield return new ImageLabel(label, File.ReadAllBytes(imagePath));
             }
         }
 
@@ -28,7 +29,7 @@ namespace FaceRecognition.Storage
         {
             var dirs = Directory.GetDirectories(directory);
             var idx = 1;
-            var dic = dirs.ToDictionary(n => n, n => idx++);
+            var dic = dirs.Select(Path.GetFileName).ToDictionary(n => n, n => idx++);
             dic["unknown"] = 0;
             return dic;
         }

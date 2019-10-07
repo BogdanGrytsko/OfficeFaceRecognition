@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using CommonObjects;
 using Emgu.CV;
 using Emgu.CV.Dnn;
 using Emgu.CV.Structure;
@@ -28,19 +26,6 @@ namespace FaceRecognition.BL
             //todo : is there a way to read embeddingModel from bytes? it's a torch model.
             embedder = DnnInvoke.ReadNet(embeddingModel);
             this.minConfidence = minConfidence;
-        }
-
-        public IEnumerable<(string, Mat)> GetFaces(IEnumerable<IImageLabel> images)
-        {
-            Console.WriteLine("[INFO] quantifying faces...");
-            foreach (var image in images)
-            {
-                Console.WriteLine($"Processing image {image.Label}");
-
-                var res = GetFaceEmbedding(image.Image);
-                if (res != null)
-                    yield return (image.Label, res);
-            }
         }
 
         public Mat GetFaceEmbedding(byte[] byteImage)

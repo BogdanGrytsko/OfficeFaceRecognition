@@ -19,7 +19,7 @@ namespace OfficeFaceRecognition
 
         private static void RunOptions(FaceRecognitionParams facePars)
         {
-            var surveillance = new Surveillance(new FileSystemDAL(facePars.DataSet), facePars.Confidence);
+            var surveillance = new Surveillance(VideoGrabFactory.GetMockCamera(), new FileSystemDAL(facePars.DataSet), facePars.Confidence);
             surveillance.Train();
 
             var testImages = new FileSystemDAL(facePars.TestSet).GetImages().ToList();
