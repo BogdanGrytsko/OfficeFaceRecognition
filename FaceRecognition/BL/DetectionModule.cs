@@ -3,7 +3,6 @@ using System.Drawing;
 using Emgu.CV;
 using Emgu.CV.Dnn;
 using Emgu.CV.Structure;
-using Emgu.CV.Cuda;
 
 namespace FaceRecognition.BL
 {
@@ -19,8 +18,6 @@ namespace FaceRecognition.BL
             Console.WriteLine("[INFO] load serialized face embedding model from disk...");
             embedder = DnnInvoke.ReadNet(embeddingModel);
             this.minConfidence = minConfidence;
-            var a = CudaInvoke.HasCuda;
-            //Emgu.CV.Cuda.GpuMat gpuMat = new Emgu.CV.Cuda.GpuMat();
         }
 
         public DetectionModule(byte[] proto, byte[] caffeModel, string embeddingModel, double minConfidence)
