@@ -137,10 +137,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommonInterfaces\CommonObjects.csproj">
-      <Project>{da23f96c-6dff-4fb2-80df-45a78d015014}</Project>
-      <Name>CommonObjects</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FaceRecognition\FaceRecognition.csproj">
       <Project>{b82339fa-4dcb-40c7-9c1f-3ed3c1b24e92}</Project>
       <Name>FaceRecognition</Name>

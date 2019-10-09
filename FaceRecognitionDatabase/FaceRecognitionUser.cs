@@ -2,10 +2,10 @@
 
 namespace FaceRecognitionDatabase
 {
-    public class FaceRecognitionUser: IFaceRecognitionUser
+    public class FaceRecognitionUser
     {
         public int UserId { get; set; }
         public CommandTypes DefaultCommand { get; set; }
-        public IUserLabel UserLabel { get; set; }
+        public UserLabel UserLabel { get; set; }
     } 
 }

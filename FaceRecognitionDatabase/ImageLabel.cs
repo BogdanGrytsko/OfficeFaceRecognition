@@ -2,7 +2,7 @@
 
 namespace FaceRecognitionDatabase
 {
-    public class ImageLabel : IImageLabel
+    public class ImageLabel
     {
         public int ImageLabelId { get; set; }
         public ImageLabel(string label, byte[] image)

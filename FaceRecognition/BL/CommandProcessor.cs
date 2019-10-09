@@ -1,5 +1,5 @@
 ﻿using CommonObjects;
-using FaceRecognition.Storage;
+using FaceRecognitionDatabase;
 using System;
 
 namespace FaceRecognition.BL
@@ -20,7 +20,7 @@ namespace FaceRecognition.BL
         /// <param name="user"></param>
         /// <param name="CommandExecutor"></param>
         /// <returns></returns>
-        public virtual ILogCommand ExecuteNewCommand(CommandTypes commandType, IFaceRecognitionUser user, Func<CommandTypes, CommandResults> CommandExecutor = null)
+        public virtual LogCommand ExecuteNewCommand(CommandTypes commandType, FaceRecognitionUser user, Func<CommandTypes, CommandResults> CommandExecutor = null)
         {
             var command = new LogCommand(commandType);
             command.StartCommandDate = DateTime.UtcNow;
@@ -60,7 +60,7 @@ namespace FaceRecognition.BL
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public virtual bool IsExecutionAllowed(IFaceRecognitionUser user)
+        public virtual bool IsExecutionAllowed(FaceRecognitionUser user)
         {
             return true;
         }

@@ -3,7 +3,7 @@ using System;
 
 namespace FaceRecognitionDatabase
 {
-    public class LogCommand : ILogCommand
+    public class LogCommand
     {
         public LogCommand() { }
         public LogCommand(CommandTypes commandType)

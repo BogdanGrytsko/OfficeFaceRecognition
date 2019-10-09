@@ -2,7 +2,7 @@
 
 namespace FaceRecognitionDatabase
 {
-    public class UserLabel: IUserLabel
+    public class UserLabel
     {
         public int UserLabelId { get; set; }
         public string Label { get; set; }

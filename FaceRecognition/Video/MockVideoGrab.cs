@@ -4,6 +4,7 @@ using System.Threading;
 using CommonObjects;
 using Emgu.CV;
 using FaceRecognition.BL;
+using FaceRecognitionDatabase;
 
 namespace FaceRecognition.Video
 {
@@ -11,12 +12,12 @@ namespace FaceRecognition.Video
     {
         public event Action<Mat> ImageGrabbed;
 
-        private readonly List<IImageLabel> images;
+        private readonly List<ImageLabel> images;
         private readonly Timer timer;
         private readonly TimeSpan period;
         private int currImgIdx;
 
-        public MockVideoGrab(List<IImageLabel> images, TimeSpan period)
+        public MockVideoGrab(List<ImageLabel> images, TimeSpan period)
         {
             this.images = images;
             this.period = period;

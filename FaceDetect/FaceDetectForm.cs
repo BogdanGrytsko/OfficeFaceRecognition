@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using Emgu.CV;
-using Emgu.CV.Face;
 using Emgu.CV.Structure;
 using FaceRecognition;
 using FaceRecognition.Storage;

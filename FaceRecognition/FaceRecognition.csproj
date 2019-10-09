@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommonInterfaces\CommonObjects.csproj" />
+    <ProjectReference Include="..\FaceRecognitionDatabase\FaceRecognitionDatabase.csproj" />
   </ItemGroup>
 
   <ItemGroup>
