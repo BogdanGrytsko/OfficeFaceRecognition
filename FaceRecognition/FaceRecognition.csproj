@@ -33,10 +33,9 @@
     <EmbeddedResource Include="Models\res10_300x300_ssd_iter_140000.caffemodel">
     </EmbeddedResource>
   </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="EMGU.CV" Version="4.1.1.3497" />
-    <PackageReference Include="EMGU.CV-CUDA" Version="4.1.1.3506" />
   </ItemGroup>
 
   <ItemGroup>
