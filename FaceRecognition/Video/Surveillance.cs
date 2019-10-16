@@ -7,6 +7,7 @@ using System.Linq;
 using CommonObjects;
 using Emgu.CV;
 using FaceRecognition.BL;
+using FaceRecognition.Door;
 
 namespace FaceRecognition.Video
 {
@@ -20,6 +21,7 @@ namespace FaceRecognition.Video
         private readonly FaceRecognitionModule recognitionModule;
         private readonly FaceEyeDetector faceEyeDetector;
         private readonly DetectionModule detectionModule;
+        private readonly DoorManager door;
         private readonly double confidence;
         private LabelMap labelMap;
 
@@ -35,6 +37,7 @@ namespace FaceRecognition.Video
             faceEyeDetector = new FaceEyeDetector("Models\\haarcascade_frontalface_default.xml", "Models\\haarcascade_eye.xml");
             recognitionModule = new FaceRecognitionModule();
             detectionModule = new DetectionModule(faceEmbeddingsModel, confidence);
+            door = new DoorManager();
             labelMap = new LabelMap(trainDataDAL.GetLabelMap());
             videoGrab.ImageGrabbed += OnImageGrabbed;
             PersonDetected += OnPersonDetected;
@@ -62,6 +65,7 @@ namespace FaceRecognition.Video
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"Success : {label}, Dist : {distance}");
+            door.Open();
         }
 
         private void RecognitionFail(double distance, string label)
