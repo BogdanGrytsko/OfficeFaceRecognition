@@ -11,6 +11,7 @@ namespace FaceRecognition.Door
         private const string url = @"https://192.168.4.2/command/open";
         private const string ThumbPrint = "6a18f05530004142a839333ffaefe2b17141e214";
         private readonly HttpClient httpClient;
+        private DateTime lastOpenTime;
 
         public DoorManager()
         {
@@ -23,6 +24,9 @@ namespace FaceRecognition.Door
 
         public async void Open()
         {
+            if (DateTime.UtcNow - lastOpenTime < TimeSpan.FromSeconds(2))
+                return;
+            lastOpenTime = DateTime.UtcNow;
             var payload = new DoorPayload { pass = "P_Open!Test" };
             var serialized = JsonConvert.SerializeObject(payload);
             var content = new StringContent(serialized, Encoding.UTF8, "application/json");
