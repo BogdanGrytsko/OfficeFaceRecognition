@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Net.Security;
 using System.Text;
@@ -23,7 +24,8 @@ namespace FaceRecognition.Door
         public async void Open()
         {
             var payload = new DoorPayload { pass = "P_Open!Test" };
-            var content = new StringContent(payload.ToString(), Encoding.UTF8, "application/json");
+            var serialized = JsonConvert.SerializeObject(payload);
+            var content = new StringContent(serialized, Encoding.UTF8, "application/json");
             var res = await httpClient.PostAsync(url, content);
             if (!res.IsSuccessStatusCode)
                 Console.WriteLine($"Can't open the door! Code : {res.StatusCode}");
