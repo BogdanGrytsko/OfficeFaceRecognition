@@ -37,12 +37,12 @@ namespace FaceRecognition.Storage
 
         public ImageLabel Get(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void Add(IEnumerable<ImageLabel> images)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void Add(ImageLabel image)
@@ -55,12 +55,12 @@ namespace FaceRecognition.Storage
 
         public void Delete(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public void SetLabel(int id, int labelId)
+        public void SetLabel(int imageLabelId, string label)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

@@ -13,6 +13,6 @@ namespace CommonObjects
 
         void Delete(int id);
 
-        void SetLabel(int id, int labelId);
+        void SetLabel(int imageLabelId, string label);
     }
 }

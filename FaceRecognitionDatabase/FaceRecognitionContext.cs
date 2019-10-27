@@ -3,7 +3,7 @@ using System.Configuration;
 
 namespace FaceRecognitionDatabase
 {
-    class FaceRecognitionContext : DbContext
+    public class FaceRecognitionContext : DbContext
     {
         public DbSet<LogCommand> LogCommands { get; set; }
         public DbSet<ImageLabel> ImageLabels { get; set; }
