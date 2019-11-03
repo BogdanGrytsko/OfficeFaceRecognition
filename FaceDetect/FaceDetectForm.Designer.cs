@@ -33,9 +33,14 @@ namespace VideoSurveillance
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.imageBox1 = new Emgu.CV.UI.ImageBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.labelDetectedPerson = new System.Windows.Forms.Label();
+            this.checkBoxEnableReccognition = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.imageBox2 = new Emgu.CV.UI.ImageBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.buttonTrain = new System.Windows.Forms.Button();
+            this.textBoxLabel = new System.Windows.Forms.TextBox();
+            this.checkBoxCapture = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.playButton = new System.Windows.Forms.ToolStripButton();
@@ -81,12 +86,34 @@ namespace VideoSurveillance
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.labelDetectedPerson);
+            this.panel1.Controls.Add(this.checkBoxEnableReccognition);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(916, 48);
             this.panel1.TabIndex = 0;
+            // 
+            // labelDetectedPerson
+            // 
+            this.labelDetectedPerson.AutoSize = true;
+            this.labelDetectedPerson.Location = new System.Drawing.Point(250, 12);
+            this.labelDetectedPerson.Name = "labelDetectedPerson";
+            this.labelDetectedPerson.Size = new System.Drawing.Size(90, 13);
+            this.labelDetectedPerson.TabIndex = 3;
+            this.labelDetectedPerson.Text = "Detected Person:";
+            // 
+            // checkBoxEnableReccognition
+            // 
+            this.checkBoxEnableReccognition.AutoSize = true;
+            this.checkBoxEnableReccognition.Location = new System.Drawing.Point(115, 11);
+            this.checkBoxEnableReccognition.Name = "checkBoxEnableReccognition";
+            this.checkBoxEnableReccognition.Size = new System.Drawing.Size(119, 17);
+            this.checkBoxEnableReccognition.TabIndex = 2;
+            this.checkBoxEnableReccognition.Text = "Enable Recognition";
+            this.checkBoxEnableReccognition.UseVisualStyleBackColor = true;
+            this.checkBoxEnableReccognition.CheckedChanged += new System.EventHandler(this.checkBoxEnableReccognition_CheckedChanged);
             // 
             // label1
             // 
@@ -108,12 +135,42 @@ namespace VideoSurveillance
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.buttonTrain);
+            this.panel2.Controls.Add(this.textBoxLabel);
+            this.panel2.Controls.Add(this.checkBoxCapture);
             this.panel2.Controls.Add(this.label2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(511, 48);
             this.panel2.TabIndex = 0;
+            // 
+            // buttonTrain
+            // 
+            this.buttonTrain.Location = new System.Drawing.Point(365, 11);
+            this.buttonTrain.Name = "buttonTrain";
+            this.buttonTrain.Size = new System.Drawing.Size(76, 23);
+            this.buttonTrain.TabIndex = 4;
+            this.buttonTrain.Text = "Train";
+            this.buttonTrain.UseVisualStyleBackColor = true;
+            this.buttonTrain.Click += new System.EventHandler(this.buttonTrain_Click);
+            // 
+            // textBoxLabel
+            // 
+            this.textBoxLabel.Location = new System.Drawing.Point(254, 13);
+            this.textBoxLabel.Name = "textBoxLabel";
+            this.textBoxLabel.Size = new System.Drawing.Size(105, 20);
+            this.textBoxLabel.TabIndex = 2;
+            // 
+            // checkBoxCapture
+            // 
+            this.checkBoxCapture.AutoSize = true;
+            this.checkBoxCapture.Location = new System.Drawing.Point(105, 13);
+            this.checkBoxCapture.Name = "checkBoxCapture";
+            this.checkBoxCapture.Size = new System.Drawing.Size(100, 11);
+            this.checkBoxCapture.TabIndex = 1;
+            this.checkBoxCapture.Text = "Capture Images with label:";
+            this.checkBoxCapture.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
@@ -201,5 +258,10 @@ namespace VideoSurveillance
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton playButton;
         private System.Windows.Forms.ToolStripButton detectionButton;
+        private System.Windows.Forms.TextBox textBoxLabel;
+        private System.Windows.Forms.CheckBox checkBoxCapture;
+        private System.Windows.Forms.Button buttonTrain;
+        private System.Windows.Forms.CheckBox checkBoxEnableReccognition;
+        private System.Windows.Forms.Label labelDetectedPerson;
     }
 }

@@ -28,7 +28,10 @@ namespace FaceRecognition.Video
         public event Action<Mat, List<Rectangle>, List<Rectangle>> FaceDetected;
         private event Action<Mat> PersonDetected;
         public event Action<Mat> ImageGrabbed;
+        public event Action<double, string> RecognitionSuccessfull;
 
+        private bool _hasTrainedModel;
+        public bool RecognitionEnable;
         public Surveillance(IVideoGrab videoGrab, ITrainDataDAL trainDataDAL, double confidence = 0.5)
         {
             this.videoGrab = videoGrab;
@@ -45,15 +48,25 @@ namespace FaceRecognition.Video
 
         private void OnPersonDetected(Mat mat)
         {
-            var (distance, label) = Predict(mat);
-            if (distance >= confidence)
-                RecognitionFail(distance, label);
-            else
-                RecognitionSuccess(distance, label);
+            if (RecognitionEnable)
+            {
+                var (distance, label) = Predict(mat);
+                if (distance >= confidence)
+                    RecognitionFail(distance, label);
+                else
+                {
+                    RecognitionSuccess(distance, label);
+                    //TODO: Create property to set edge distance
+                    if (distance > 0.485)
+                        RecognitionSuccessfull?.Invoke(distance, label);
+                }
+            }
         }
 
         public (double, string) Predict(Mat mat)
         {
+            if (!_hasTrainedModel) EnsureTrained();
+
             var faceEmb = detectionModule.GetFaceEmbedding(mat);
             if (faceEmb == null)
                 return (1, "Couldn't extract face embedding");
@@ -65,7 +78,8 @@ namespace FaceRecognition.Video
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"Success : {label}, Dist : {distance}");
-            door.Open();
+            //TODO: make switch for debug 
+            //door.Open();
         }
 
         private void RecognitionFail(double distance, string label)
@@ -88,7 +102,11 @@ namespace FaceRecognition.Video
                 .Select(img => (labelMap.Map[img.Label], detectionModule.GetFaceEmbedding(img.Image)))
                 .Where(tuple => tuple.Item2 != null)
                 .ToList();
-            recognitionModule.Train(faceEmbeddings, trainedModel);
+            if (faceEmbeddings != null && faceEmbeddings.Any())
+            {
+                recognitionModule.Train(faceEmbeddings, trainedModel);
+            }
+            videoGrab.Start();
         }
 
         public void EnsureTrained()
@@ -103,6 +121,7 @@ namespace FaceRecognition.Video
                 Console.WriteLine("[INFO] Model doesn't exist, started training");
                 Train();
             }
+            _hasTrainedModel = true;
         }
 
         private void OnImageGrabbed(Mat mat)

@@ -60,10 +60,15 @@ namespace FaceRecognition.BL
             //compute the (x, y)-coordinates of the bounding box for the face
             var (startX, startY, endX, endY) = (data[0, 0, maxi, 3] * w, data[0, 0, maxi, 4] * h,
                 data[0, 0, maxi, 5] * w, data[0, 0, maxi, 6] * h);
+            // correct coordinates
+            if (startX < 0) startX = 0;
+            if (endX > image.Width) endX = image.Width;
+
+            if (startY < 0) startY = 0;
+            if (endY > image.Height) endY = image.Height;
 
             //extract the face ROI and grab the ROI dimensions
             var faceRect = Rectangle.FromLTRB((int)startX, (int)startY, (int)endX, (int)endY);
-
 #if DEBUG
             //DebugHelper.DrawFaceRectAndSave(image.Bitmap, faceRect);
 #endif
@@ -88,7 +93,7 @@ namespace FaceRecognition.BL
             var model = Utils.GetResourceBytes("Models.res10_300x300_ssd_iter_140000.caffemodel");
             return DnnInvoke.ReadNetFromCaffe(proto, model);
         }
-        
+
         private static int GetMaxConfidenceIdx(Mat detection, float[,,,] data)
         {
             var maxi = 0;

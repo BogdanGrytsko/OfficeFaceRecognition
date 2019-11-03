@@ -105,6 +105,11 @@
     <Compile Include="FaceDetectForm.Designer.cs">
       <DependentUpon>FaceDetectForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
@@ -113,6 +118,10 @@
     <EmbeddedResource Include="FaceDetectForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FaceDetectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +148,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FaceRecognitionDatabase\FaceRecognitionDatabase.csproj">
+      <Project>{F862AD5C-4FE9-4740-AA31-C42242B9748F}</Project>
+      <Name>FaceRecognitionDatabase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FaceRecognition\FaceRecognition.csproj">
       <Project>{b82339fa-4dcb-40c7-9c1f-3ed3c1b24e92}</Project>
       <Name>FaceRecognition</Name>

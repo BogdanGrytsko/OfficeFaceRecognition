@@ -1,6 +1,8 @@
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 using Emgu.CV;
@@ -8,12 +10,47 @@ using Emgu.CV.Structure;
 using FaceRecognition;
 using FaceRecognition.Storage;
 using FaceRecognition.Video;
+using FaceRecognitionDatabase;
 
 namespace VideoSurveillance
 {
     public partial class FaceDetectForm : Form
     {
         private readonly Surveillance surveillance;
+
+        private string LabelText
+        {
+            get
+            {
+                string text = string.Empty;
+                textBoxLabel.Invoke(new MethodInvoker(delegate
+                {
+                    text = textBoxLabel.Text;
+                }));
+                return text;
+            }
+        }
+
+        private string DetecctedPersonText
+        {
+            get
+            {
+                string text = string.Empty;
+                labelDetectedPerson.Invoke(new MethodInvoker(delegate
+                {
+                    text = labelDetectedPerson.Text;
+                }));
+                return text;
+            }
+            set
+            {
+                string text = value;
+                labelDetectedPerson.BeginInvoke(new MethodInvoker(delegate
+                {
+                    labelDetectedPerson.Text = text;
+                }));
+            }
+        }
 
         public FaceDetectForm()
         {
@@ -26,7 +63,13 @@ namespace VideoSurveillance
         {
             surveillance.ImageGrabbed += SurveillanceOnImageGrabbed;
             surveillance.FaceDetected += SurveillanceOnFaceDetected;
+            surveillance.RecognitionSuccessfull += Surveillance_RecognitionSuccessfull;
             surveillance.Start();
+        }
+
+        private void Surveillance_RecognitionSuccessfull(double distance, string label)
+        {
+            DetecctedPersonText = string.Format("{0} Label detected:{1}, distance:{2}", DateTime.Now, label, distance);
         }
 
         private void SurveillanceOnImageGrabbed(Mat mat)
@@ -44,7 +87,18 @@ namespace VideoSurveillance
             foreach (Rectangle eye in eyes)
                 CvInvoke.Rectangle(frame, eye, new Bgr(Color.Blue).MCvScalar, 2);
 
-            imageBox1.Image = frame;
+            imageBox2.Image = frame;
+            var text = LabelText;
+            if (checkBoxCapture.Checked && faces.Count == 1 && eyes.Count == 2 && text != null && text.Length > 0)
+            {
+                MemoryStream imageMemoryStream = new MemoryStream();
+                Image imageToTrain = mat.Bitmap;
+                imageToTrain.Save(imageMemoryStream, ImageFormat.Png);
+                var directory = String.Format("{0}/Output", Directory.GetCurrentDirectory());
+                var imageLabel = new ImageLabel(text, imageMemoryStream.ToArray());
+                var dal = new FileSystemDAL(directory);
+                dal.Add(imageLabel);
+            }
         }
 
         private void playButton_Click(object sender, EventArgs e)
@@ -61,6 +115,23 @@ namespace VideoSurveillance
                 surveillance.FaceDetected += SurveillanceOnFaceDetected;
             else
                 surveillance.FaceDetected -= SurveillanceOnFaceDetected;
+        }
+
+        private void buttonTrain_Click(object sender, EventArgs e)
+        {
+            if (!checkBoxCapture.Checked)
+            {
+                checkBoxEnableReccognition.Checked = false;
+                surveillance.Train();
+            }
+        }
+
+        private void checkBoxEnableReccognition_CheckedChanged(object sender, EventArgs e)
+        {
+            if (surveillance != null)
+            {
+                surveillance.RecognitionEnable = ((CheckBox)sender).Checked;
+            }
         }
     }
 }

@@ -47,8 +47,8 @@ namespace FaceRecognition.Storage
 
         public void Add(ImageLabel image)
         {
-            var timedDirectory = Path.Combine(Environment.CurrentDirectory, directory, DateTime.UtcNow.ToString("yyyy.MM.dd"));
-            var path = Path.Combine(timedDirectory, $"{DateTime.UtcNow:HH-mm-ss}.{image.Label}.png");
+            var timedDirectory = Path.Combine(Environment.CurrentDirectory, directory, image.Label);
+            var path = Path.Combine(timedDirectory, $"{DateTime.UtcNow:HH-mm-ss-fff}.{image.Label}.png");
             Directory.CreateDirectory(timedDirectory);
             File.WriteAllBytes(path, image.Image);
         }
