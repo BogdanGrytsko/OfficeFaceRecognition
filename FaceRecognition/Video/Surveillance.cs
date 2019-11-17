@@ -13,12 +13,13 @@ namespace FaceRecognition.Video
 {
     public class Surveillance
     {
-        private const string trainedModel = "Embeddings.trained", faceEmbeddingsModel = "Models\\openface_nn4.small2.v1.t7";
+        private const string trainedModel = "Embeddings.trained", trainedSecondModel = "EmbeddingsSecond.trained", faceEmbeddingsModel = "Models\\openface_nn4.small2.v1.t7", faceEmbeddingsSecondModel = "Models\\res10_300x300_ssd_iter_140000.caffemodel";
         private int counter;
 
         private readonly IVideoGrab videoGrab;
         private readonly ITrainDataDAL trainDataDAL;
-        private readonly FaceRecognitionModule recognitionModule;
+        private FaceRecognitionModule recognitionModule;
+        private readonly FaceRecognitionModule recognitionModuleSecond;
         private readonly FaceEyeDetector faceEyeDetector;
         private readonly DetectionModule detectionModule;
         private readonly DoorManager door;
@@ -39,7 +40,8 @@ namespace FaceRecognition.Video
             this.confidence = confidence;
             faceEyeDetector = new FaceEyeDetector("Models\\haarcascade_frontalface_default.xml", "Models\\haarcascade_eye.xml");
             recognitionModule = new FaceRecognitionModule();
-            detectionModule = new DetectionModule(faceEmbeddingsModel, confidence);
+            recognitionModuleSecond = new FaceRecognitionModule();
+            detectionModule = new DetectionModule(faceEmbeddingsModel, faceEmbeddingsSecondModel, confidence);
             door = new DoorManager();
             labelMap = new LabelMap(trainDataDAL.GetLabelMap());
             videoGrab.ImageGrabbed += OnImageGrabbed;
@@ -51,14 +53,21 @@ namespace FaceRecognition.Video
             if (RecognitionEnable)
             {
                 var (distance, label) = Predict(mat);
-                if (distance >= confidence)
+                if (distance <= confidence)
                     RecognitionFail(distance, label);
                 else
-                {
-                    RecognitionSuccess(distance, label);
-                    //TODO: Create property to set edge distance
-                    if (distance > 0.485)
-                        RecognitionSuccessfull?.Invoke(distance, label);
+                {                               
+                    var (distanceSecond, labelSecond) = PredictSecond(mat);
+                    if (!label.Equals(labelSecond))
+                        RecognitionFail(distanceSecond, labelSecond);
+                    else
+                    {
+                        RecognitionSuccess(distance, label);
+                        RecognitionSuccess(distanceSecond, labelSecond);
+                        //TODO: Create property to set edge distance to the second recognizer
+                        if (distance >= confidence)
+                            RecognitionSuccessfull?.Invoke(distanceSecond, labelSecond);
+                    }
                 }
             }
         }
@@ -71,6 +80,17 @@ namespace FaceRecognition.Video
             if (faceEmb == null)
                 return (1, "Couldn't extract face embedding");
             var prediction = recognitionModule.Predict(faceEmb);
+            return (prediction.Distance, labelMap.ReverseMap[prediction.Label]);
+        }
+
+        public (double, string) PredictSecond(Mat mat)
+        {
+            if (!_hasTrainedModel) EnsureTrained();
+
+            var faceEmb = detectionModule.GetFaceEmbeddingSecond(mat);
+            if (faceEmb == null)
+                return (1, "Couldn't extract face embedding");
+            var prediction = recognitionModuleSecond.Predict(faceEmb);
             return (prediction.Distance, labelMap.ReverseMap[prediction.Label]);
         }
 
@@ -106,6 +126,16 @@ namespace FaceRecognition.Video
             {
                 recognitionModule.Train(faceEmbeddings, trainedModel);
             }
+
+            var faceEmbeddingsSecond = images
+                .Select(img => (labelMap.Map[img.Label], detectionModule.GetFaceEmbeddingSecond(img.Image)))
+                .Where(tuple => tuple.Item2 != null)
+                .ToList();
+            if (faceEmbeddings != null && faceEmbeddings.Any())
+            {
+                recognitionModule.Train(faceEmbeddingsSecond, trainedSecondModel);
+            }           
+            _hasTrainedModel = false; //force reloading the new model before start recognition
             videoGrab.Start();
         }
 
@@ -114,7 +144,19 @@ namespace FaceRecognition.Video
             if (File.Exists(trainedModel))
             {
                 Console.WriteLine("[INFO] Model exists, loading");
+                recognitionModule = new FaceRecognitionModule(); // prevent crashes during repeatable load
                 recognitionModule.Load(trainedModel);
+            }
+            else
+            {
+                Console.WriteLine("[INFO] Model doesn't exist, started training");
+                Train();
+            }
+
+            if (File.Exists(trainedSecondModel))
+            {
+                Console.WriteLine("[INFO] Second Model exists, loading");
+                recognitionModuleSecond.Load(trainedSecondModel);
             }
             else
             {
