@@ -173,7 +173,10 @@
   <Import Project="..\packages\EMGU.CV.Native.10.1.243\build\EMGU.CV.Native.targets" Condition="Exists('..\packages\EMGU.CV.Native.10.1.243\build\EMGU.CV.Native.targets')" />
   <Import Project="..\packages\EMGU.CV-CUDA.4.1.1.3506\build\EMGU.CV-CUDA.targets" Condition="Exists('..\packages\EMGU.CV-CUDA.4.1.1.3506\build\EMGU.CV-CUDA.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>if not exist "$(TargetDir)Output" mkdir "$(TargetDir)Output"</PreBuildEvent>
+    <PreBuildEvent>if not exist "$(TargetDir)Output" mkdir "$(TargetDir)Output"
+if not exist "$(TargetDir)PersonalModels" mkdir "$(TargetDir)PersonalModels"
+if not exist "$(TargetDir)PersonalModels/First" mkdir "$(TargetDir)PersonalModelsFirst"
+if not exist "$(TargetDir)PersonalModelsSecond" mkdir "$(TargetDir)PersonalModels/Second"</PreBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\EMGU.CV.4.1.1.3497\build\EMGU.CV.targets" Condition="Exists('..\packages\EMGU.CV.4.1.1.3497\build\EMGU.CV.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

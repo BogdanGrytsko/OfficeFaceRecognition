@@ -53,7 +53,7 @@ namespace FaceRecognition.Video
             if (RecognitionEnable)
             {
                 var (distance, label) = Predict(mat);
-                if (distance <= confidence)
+                if (distance <= 0.3)
                     RecognitionFail(distance, label);
                 else
                 {                               
@@ -124,7 +124,7 @@ namespace FaceRecognition.Video
                 .ToList();
             if (faceEmbeddings != null && faceEmbeddings.Any())
             {
-                recognitionModule.Train(faceEmbeddings, trainedModel);
+                recognitionModule.Train(faceEmbeddings, trainedModel, "PersonalModels//First//");
             }
 
             var faceEmbeddingsSecond = images
@@ -133,7 +133,7 @@ namespace FaceRecognition.Video
                 .ToList();
             if (faceEmbeddings != null && faceEmbeddings.Any())
             {
-                recognitionModule.Train(faceEmbeddingsSecond, trainedSecondModel);
+                recognitionModule.Train(faceEmbeddingsSecond, trainedSecondModel, "PersonalModels//Second//");
             }           
             _hasTrainedModel = false; //force reloading the new model before start recognition
             videoGrab.Start();

@@ -10,7 +10,7 @@ namespace FaceRecognition.Video
         [DllImport("msvcrt.dll")]
         public static extern int _putenv_s(string e, string v);
 
-        private const string oldCamera = "rtsp://admin:Face1234@192.168.5.49:554/onvif1", newCamera = "rtsp://192.168.5.5:8554/mjpeg/1";
+        private const string oldCamera = "rtsp://admin:Nick1234@192.168.1.244:554/h264/ch1/main/av_stream", newCamera = "rtsp://192.168.5.5:8554/mjpeg/1";
 
         public static IVideoGrab GetOldCamera()
         {
