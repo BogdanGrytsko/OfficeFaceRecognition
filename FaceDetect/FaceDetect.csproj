@@ -176,7 +176,7 @@
     <PreBuildEvent>if not exist "$(TargetDir)Output" mkdir "$(TargetDir)Output"
 if not exist "$(TargetDir)PersonalModels" mkdir "$(TargetDir)PersonalModels"
 if not exist "$(TargetDir)PersonalModels/First" mkdir "$(TargetDir)PersonalModelsFirst"
-if not exist "$(TargetDir)PersonalModelsSecond" mkdir "$(TargetDir)PersonalModels/Second"</PreBuildEvent>
+if not exist "$(TargetDir)PersonalModels/Second" mkdir "$(TargetDir)PersonalModels/Second"</PreBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\EMGU.CV.4.1.1.3497\build\EMGU.CV.targets" Condition="Exists('..\packages\EMGU.CV.4.1.1.3497\build\EMGU.CV.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

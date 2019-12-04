@@ -94,6 +94,28 @@ namespace FaceRecognition.Video
             return (prediction.Distance, labelMap.ReverseMap[prediction.Label]);
         }
 
+        public double PredictPersonConfidenceFirst(Mat mat, int personId)
+        {
+            if (!_hasTrainedModel) EnsureTrained();
+            var faceEmb = detectionModule.GetFaceEmbedding(mat);
+            if (faceEmb == null)
+                return 0;
+            var recognitionPersonModule =  new FaceRecognitionModule();
+            var personalModelFileFilePath = String.Format("PersonalModels//First//{0}.trained", personId);
+            if (File.Exists(personalModelFileFilePath))
+            {
+                Console.WriteLine("[INFO] Second Model exists, loading");
+                recognitionPersonModule.Load(personalModelFileFilePath);
+            }
+            else
+            {
+                Console.WriteLine("[INFO] Model doesn't exist, started training");
+                Train();
+            }
+            var prediction = recognitionPersonModule.Predict(faceEmb);
+            return prediction.Distance;
+        }
+
         private void RecognitionSuccess(double distance, string label)
         {
             Console.ForegroundColor = ConsoleColor.White;
