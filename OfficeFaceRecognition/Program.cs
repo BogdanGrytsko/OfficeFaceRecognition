@@ -35,7 +35,7 @@ namespace OfficeFaceRecognition
 
             foreach (var image in testImages)
             {
-                var (distance, label) = surveillance.Predict(Utils.GetMat(image.Image));
+                var (distance, label, labelId) = surveillance.Predict(Utils.GetMat(image.Image));
                 Console.WriteLine($"Img name : {image.Label} Prediction: {label}, Dist : {distance}");
             }
         }

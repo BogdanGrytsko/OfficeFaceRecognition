@@ -52,18 +52,23 @@ namespace FaceRecognition.Video
         {
             if (RecognitionEnable)
             {
-                var (distance, label) = Predict(mat);
+                var (distance, label, labelId) = Predict(mat);
                 if (distance <= 0.3)
                     RecognitionFail(distance, label);
                 else
                 {                               
                     var (distanceSecond, labelSecond) = PredictSecond(mat);
                     if (!label.Equals(labelSecond))
-                        RecognitionFail(distanceSecond, labelSecond);
+                    {
+                        //RecognitionFail(distanceSecond, labelSecond);
+                    }
                     else
                     {
+                        // calculate the final precision based on one person model
+                        var distancePersonal = PredictPersonConfidenceFirst(mat, labelId);
                         RecognitionSuccess(distance, label);
                         RecognitionSuccess(distanceSecond, labelSecond);
+                        RecognitionSuccess(distancePersonal, labelSecond);
                         //TODO: Create property to set edge distance to the second recognizer
                         if (distance >= confidence)
                             RecognitionSuccessfull?.Invoke(distanceSecond, labelSecond);
@@ -72,15 +77,15 @@ namespace FaceRecognition.Video
             }
         }
 
-        public (double, string) Predict(Mat mat)
+        public (double, string, int) Predict(Mat mat)
         {
             if (!_hasTrainedModel) EnsureTrained();
 
             var faceEmb = detectionModule.GetFaceEmbedding(mat);
             if (faceEmb == null)
-                return (1, "Couldn't extract face embedding");
+                return (1, "Couldn't extract face embedding", -1);
             var prediction = recognitionModule.Predict(faceEmb);
-            return (prediction.Distance, labelMap.ReverseMap[prediction.Label]);
+            return (prediction.Distance, labelMap.ReverseMap[prediction.Label], prediction.Label);
         }
 
         public (double, string) PredictSecond(Mat mat)
