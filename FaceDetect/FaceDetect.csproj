@@ -175,7 +175,7 @@
   <PropertyGroup>
     <PreBuildEvent>if not exist "$(TargetDir)Output" mkdir "$(TargetDir)Output"
 if not exist "$(TargetDir)PersonalModels" mkdir "$(TargetDir)PersonalModels"
-if not exist "$(TargetDir)PersonalModels/First" mkdir "$(TargetDir)PersonalModelsFirst"
+if not exist "$(TargetDir)PersonalModels/First" mkdir "$(TargetDir)PersonalModels/First"
 if not exist "$(TargetDir)PersonalModels/Second" mkdir "$(TargetDir)PersonalModels/Second"</PreBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\EMGU.CV.4.1.1.3497\build\EMGU.CV.targets" Condition="Exists('..\packages\EMGU.CV.4.1.1.3497\build\EMGU.CV.targets')" />
